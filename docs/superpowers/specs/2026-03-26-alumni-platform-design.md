@@ -150,9 +150,9 @@ Note: Approved profiles are fully public (all columns). RLS operates at the row 
 
 | State | Can see | Can do |
 |---|---|---|
-| Anonymous | Landing, Entrevistas, Trabalho Alumni, Contato, Mapa (public stats) | Submit contact form, register |
+| Anonymous | Landing, Entrevistas, Trabalho Alumni, Contato, Mapa (public stats), Banco de Dados (anonymized — no names, no contact info, shows company/job/class/city) | Submit contact form, register |
 | Authenticated + pending | All public + own profile edit | Edit own profile |
-| Authenticated + approved | All public + Banco de Dados, full Mapa, other profiles | All above |
+| Authenticated + approved | All public + Banco de Dados (full profiles with names and contact info), full Mapa, profile view pages | All above |
 | Admin | Everything | CRUD all content, approve/reject users, manage companies/sectors |
 
 ### Admin Bootstrap

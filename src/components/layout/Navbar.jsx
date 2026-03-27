@@ -7,23 +7,17 @@ import { Menu } from 'lucide-react'
 
 const publicLinks = [
   { to: '/', label: 'Home' },
+  { to: '/banco-de-dados', label: 'Banco de Dados' },
   { to: '/mapa-dos-egressos', label: 'Mapa dos Egressos' },
   { to: '/contato', label: 'Contato' },
 ]
 
-const authedLinks = [
-  { to: '/banco-de-dados', label: 'Banco de Dados' },
-]
-
 export function Navbar() {
-  const { isAuthenticated, isApproved, isAdmin, profile, alumni, signOut } = useAuth()
+  const { isAuthenticated, isAdmin, profile, alumni, signOut } = useAuth()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
 
-  const links = [
-    ...publicLinks,
-    ...(isAuthenticated && isApproved ? authedLinks : []),
-  ]
+  const links = publicLinks
 
   async function handleSignOut() {
     await signOut()

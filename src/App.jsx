@@ -52,9 +52,7 @@ export default function App() {
                 <Route path="/perfil" element={
                   <ProtectedRoute><Perfil /></ProtectedRoute>
                 } />
-                <Route path="/banco-de-dados" element={
-                  <ApprovedRoute><BancoDeDados /></ApprovedRoute>
-                } />
+                <Route path="/banco-de-dados" element={<BancoDeDados />} />
                 <Route path="/perfil/:id" element={
                   <ApprovedRoute><PerfilView /></ApprovedRoute>
                 } />
