@@ -49,19 +49,19 @@ export function LogoCluster({ logoCluster = [], onClick }) {
   return (
     <TooltipProvider>
       <div className="space-y-8">
-        {logoCluster.map((sector) => (
-          <div key={sector.id}>
+        {logoCluster.map((group) => (
+          <div key={group.sector}>
             <div className="mb-3 flex items-center gap-3">
               <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                {sector.name}
+                {group.sector}
               </h3>
               <span className="text-xs text-muted-foreground/60">
-                {sector.companies.length} {sector.companies.length === 1 ? 'empresa' : 'empresas'}
+                {group.companies.length} {group.companies.length === 1 ? 'empresa' : 'empresas'}
               </span>
               <div className="h-px flex-1 bg-border" />
             </div>
             <div className="flex flex-wrap items-start gap-3">
-              {sector.companies.map((company) => (
+              {group.companies.map((company) => (
                 <CompanyTile key={company.id} company={company} onClick={onClick} />
               ))}
             </div>
