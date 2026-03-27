@@ -23,8 +23,13 @@ import Empresas from '@/pages/admin/Empresas'
 import Setores from '@/pages/admin/Setores'
 import ContatoAdmin from '@/pages/admin/ContatoAdmin'
 
-function Placeholder({ name }) {
-  return <div className="p-8 text-center text-lg">{name}</div>
+function NotFound() {
+  return (
+    <div className="flex flex-col items-center justify-center py-24 text-center">
+      <h1 className="mb-2 text-4xl font-bold">404</h1>
+      <p className="text-muted-foreground">Página não encontrada.</p>
+    </div>
+  )
 }
 
 export default function App() {
@@ -64,7 +69,7 @@ export default function App() {
                   <Route path="contato" element={<ContatoAdmin />} />
                 </Route>
 
-                <Route path="*" element={<Placeholder name="404 — Página não encontrada" />} />
+                <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>
           </TooltipProvider>
