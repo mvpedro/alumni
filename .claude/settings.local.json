@@ -17,7 +17,20 @@
       "Bash(npm --version)",
       "Bash(npx:*)",
       "Bash(npm install:*)",
-      "Bash(npm audit:*)"
+      "Bash(npm audit:*)",
+      "Bash(timeout 20 npm run dev)",
+      "Bash(VITE_SUPABASE_URL=http://localhost:54321 VITE_SUPABASE_ANON_KEY=test-key npm run build 2>&1)",
+      "Bash(\"C:/Users/pedro/Documents/work/alumni/.env\")",
+      "Read(//c/Users/pedro/**)",
+      "Read(//c/Users/pedro/.config/**)",
+      "Bash(ls:*)",
+      "Bash(npm run:*)",
+      "Bash(gh secret:*)",
+      "Bash(export SUPABASE_ACCESS_TOKEN=\"sbp_da3dd39846310eef182437731f1d135f98f53e2b\")",
+      "Bash(curl:*)",
+      "Bash(SERVICE_KEY=\"***REDACTED_SERVICE_ROLE_KEY***\")",
+      "Bash(__NEW_LINE_f21808af0a1ac38c__ curl:*)",
+      "Bash(__NEW_LINE_fc860cec360077b0__ curl:*)"
     ]
   }
 }

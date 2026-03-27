@@ -8,7 +8,7 @@ export function useMapaStats() {
       const [profilesRes, companiesRes, sectorsRes] = await Promise.all([
         supabase
           .from('profiles')
-          .select('id, entry_class, state, company_id, company:companies(id, sector_id)')
+          .select('id, entry_class, state, company_id, company:companies!profiles_company_id_fkey(id, sector_id)')
           .eq('status', 'approved'),
         supabase
           .from('companies')

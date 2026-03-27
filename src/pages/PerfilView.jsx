@@ -14,7 +14,7 @@ function usePublicProfile(id) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('*, company:companies(id, name, logo_url, sector:sectors(id, name))')
+        .select('*, company:companies!profiles_company_id_fkey(id, name, logo_url, sector:sectors(id, name))')
         .eq('id', id)
         .eq('status', 'approved')
         .single()

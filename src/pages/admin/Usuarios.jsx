@@ -38,7 +38,7 @@ function useUsers() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('*, company:companies(name)')
+        .select('*, company:companies!profiles_company_id_fkey(name)')
         .order('created_at', { ascending: false })
       if (error) throw error
       return data
