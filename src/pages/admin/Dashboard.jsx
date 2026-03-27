@@ -16,7 +16,7 @@ function useDashboardStats() {
           .eq('status', 'pending'),
         supabase.from('companies').select('id', { count: 'exact', head: true }),
         supabase
-          .from('messages')
+          .from('contact_messages')
           .select('id', { count: 'exact', head: true })
           .eq('read', false),
       ])
