@@ -13,10 +13,9 @@ function usePublicProfile(id) {
     queryKey: ['profile', id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('profiles')
-        .select('*, company:companies!profiles_company_id_fkey(id, name, logo_url, sector:sectors(id, name))')
+        .from('alumni')
+        .select('*, company:companies(id, name, logo_url, sector:sectors(id, name))')
         .eq('id', id)
-        .eq('status', 'approved')
         .single()
       if (error) throw error
       return data
@@ -167,8 +166,8 @@ export default function PerfilView() {
         </Card>
       )}
 
-      {/* Skills + Interests */}
-      {(profile.skills?.length > 0 || profile.interests?.length > 0) && (
+      {/* Skills + Interests + Extracurriculars */}
+      {(profile.skills?.length > 0 || profile.interests?.length > 0 || profile.extracurriculars?.length > 0) && (
         <Card className="mb-6">
           <CardContent className="p-6">
             <div className="grid gap-4 sm:grid-cols-2">
@@ -192,7 +191,32 @@ export default function PerfilView() {
                   </div>
                 </div>
               )}
+              {profile.extracurriculars?.length > 0 && (
+                <div>
+                  <h3 className="mb-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">Atividades extracurriculares</h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {profile.extracurriculars.map((item) => (
+                      <Badge key={item} variant="secondary">{item}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* International experience */}
+      {profile.has_international_experience && (
+        <Card className="mb-6">
+          <CardContent className="p-6">
+            <h3 className="mb-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">Experiência Internacional</h3>
+            {profile.international_experience_type && (
+              <p className="text-sm font-medium">{profile.international_experience_type}</p>
+            )}
+            {profile.international_experience_detail && (
+              <p className="mt-1 text-sm text-muted-foreground">{profile.international_experience_detail}</p>
+            )}
           </CardContent>
         </Card>
       )}

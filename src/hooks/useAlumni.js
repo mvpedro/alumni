@@ -8,9 +8,8 @@ export function useAlumni({ search = '', sector = '', company = '', city = '', e
     queryKey: ['alumni', { search, sector, company, city, entryClass, openToMentoring, page }],
     queryFn: async () => {
       let query = supabase
-        .from('profiles')
-        .select('*, company:companies!profiles_company_id_fkey(id, name, logo_url, sector:sectors(id, name))', { count: 'exact' })
-        .eq('status', 'approved')
+        .from('alumni')
+        .select('*, company:companies(id, name, logo_url, sector:sectors(id, name))', { count: 'exact' })
 
       if (search) {
         query = query.or(`full_name.ilike.%${search}%,job_title.ilike.%${search}%`)

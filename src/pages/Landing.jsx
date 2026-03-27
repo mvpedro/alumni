@@ -10,7 +10,7 @@ function useLandingStats() {
     queryKey: ['landing-stats'],
     queryFn: async () => {
       const [alumniRes, companiesRes, sectorsRes] = await Promise.all([
-        supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('status', 'approved'),
+        supabase.from('alumni').select('id', { count: 'exact', head: true }),
         supabase.from('companies').select('id', { count: 'exact', head: true }),
         supabase.from('sectors').select('id', { count: 'exact', head: true }),
       ])

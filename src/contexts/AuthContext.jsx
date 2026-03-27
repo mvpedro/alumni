@@ -6,6 +6,7 @@ const AuthContext = createContext(null)
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null)
   const [profile, setProfile] = useState(null)
+  const [alumni, setAlumni] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -22,6 +23,7 @@ export function AuthProvider({ children }) {
           await fetchProfile(session.user.id)
         } else {
           setProfile(null)
+          setAlumni(null)
           setLoading(false)
         }
       }
@@ -31,12 +33,24 @@ export function AuthProvider({ children }) {
   }, [])
 
   async function fetchProfile(userId) {
-    const { data } = await supabase
+    const { data: profileData } = await supabase
       .from('profiles')
-      .select('*, company:companies!profiles_company_id_fkey(*)')
+      .select('*')
       .eq('id', userId)
       .single()
-    setProfile(data)
+
+    let alumniData = null
+    if (profileData) {
+      const { data } = await supabase
+        .from('alumni')
+        .select('*, company:companies(id, name, logo_url)')
+        .eq('profile_id', userId)
+        .single()
+      alumniData = data
+    }
+
+    setProfile(profileData)
+    setAlumni(alumniData)
     setLoading(false)
   }
 
@@ -73,6 +87,7 @@ export function AuthProvider({ children }) {
     session,
     user: session?.user ?? null,
     profile,
+    alumni,
     loading,
     isAuthenticated: !!session,
     isApproved: profile?.status === 'approved',

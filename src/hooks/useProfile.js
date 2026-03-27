@@ -8,9 +8,9 @@ export function useUpdateProfile() {
   return useMutation({
     mutationFn: async (updates) => {
       const { data, error } = await supabase
-        .from('profiles')
+        .from('alumni')
         .update(updates)
-        .eq('id', user.id)
+        .eq('profile_id', user.id)
         .select()
         .single()
       if (error) throw error

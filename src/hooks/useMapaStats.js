@@ -7,9 +7,8 @@ export function useMapaStats() {
     queryFn: async () => {
       const [profilesRes, companiesRes, sectorsRes] = await Promise.all([
         supabase
-          .from('profiles')
-          .select('id, entry_class, state, company_id, company:companies!profiles_company_id_fkey(id, sector_id)')
-          .eq('status', 'approved'),
+          .from('alumni')
+          .select('id, entry_class, state, company_id, company:companies(id, sector_id)'),
         supabase
           .from('companies')
           .select('id, name, logo_url, alumni_count, sector_id, sector:sectors(id, name)')

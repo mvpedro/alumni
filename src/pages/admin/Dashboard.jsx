@@ -9,7 +9,7 @@ function useDashboardStats() {
     queryKey: ['admin', 'dashboard-stats'],
     queryFn: async () => {
       const [profilesRes, pendingRes, companiesRes, messagesRes] = await Promise.all([
-        supabase.from('profiles').select('id', { count: 'exact', head: true }),
+        supabase.from('alumni').select('id', { count: 'exact', head: true }),
         supabase
           .from('profiles')
           .select('id', { count: 'exact', head: true })
@@ -22,7 +22,7 @@ function useDashboardStats() {
       ])
 
       return {
-        totalProfiles: profilesRes.count ?? 0,
+        totalAlumni: profilesRes.count ?? 0,
         pendingApprovals: pendingRes.count ?? 0,
         totalCompanies: companiesRes.count ?? 0,
         unreadMessages: messagesRes.count ?? 0,
@@ -55,8 +55,8 @@ export default function Dashboard() {
       <h1 className="mb-6 text-2xl font-bold">Dashboard</h1>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          title="Total de perfis"
-          value={stats?.totalProfiles}
+          title="Total de alumni"
+          value={stats?.totalAlumni}
           icon={Users}
           loading={isLoading}
         />

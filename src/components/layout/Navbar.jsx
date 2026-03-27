@@ -16,7 +16,7 @@ const authedLinks = [
 ]
 
 export function Navbar() {
-  const { isAuthenticated, isApproved, isAdmin, profile, signOut } = useAuth()
+  const { isAuthenticated, isApproved, isAdmin, profile, alumni, signOut } = useAuth()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
 
@@ -52,7 +52,7 @@ export function Navbar() {
           )}
           {isAuthenticated ? (
             <div className="flex items-center gap-2">
-              <Link to="/perfil"><Button variant="ghost" size="sm">{profile?.full_name || 'Perfil'}</Button></Link>
+              <Link to="/perfil"><Button variant="ghost" size="sm">{alumni?.full_name || profile?.full_name || 'Perfil'}</Button></Link>
               <Button variant="outline" size="sm" onClick={handleSignOut}>Sair</Button>
             </div>
           ) : (

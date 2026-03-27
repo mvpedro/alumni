@@ -16,7 +16,7 @@ const statusMap = {
 }
 
 export default function Perfil() {
-  const { profile, refreshProfile } = useAuth()
+  const { profile, alumni, refreshProfile } = useAuth()
   const updateProfile = useUpdateProfile()
   const uploadAvatar = useUploadAvatar()
   const fileInputRef = useRef(null)
@@ -71,9 +71,9 @@ export default function Perfil() {
           <div className="flex items-center gap-4">
             <div className="relative">
               <Avatar className="h-20 w-20">
-                <AvatarImage src={profile?.avatar_url} alt={profile?.full_name} />
+                <AvatarImage src={alumni?.avatar_url} alt={alumni?.full_name} />
                 <AvatarFallback className="text-2xl">
-                  {profile?.full_name?.charAt(0)?.toUpperCase() ?? '?'}
+                  {alumni?.full_name?.charAt(0)?.toUpperCase() ?? '?'}
                 </AvatarFallback>
               </Avatar>
               <button
@@ -116,7 +116,7 @@ export default function Perfil() {
         </CardHeader>
         <CardContent>
           <ProfileForm
-            profile={profile}
+            profile={alumni}
             onSubmit={handleSubmit}
             loading={updateProfile.isPending}
           />
