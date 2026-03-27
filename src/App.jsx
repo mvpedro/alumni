@@ -9,6 +9,7 @@ import { ApprovedRoute } from '@/components/layout/ApprovedRoute'
 import { AdminRoute } from '@/components/layout/AdminRoute'
 import Login from '@/pages/Login'
 import Cadastro from '@/pages/Cadastro'
+import Perfil from '@/pages/Perfil'
 
 function Placeholder({ name }) {
   return <div className="p-8 text-center text-lg">{name}</div>
@@ -31,7 +32,7 @@ export default function App() {
               <Route path="/mapa-dos-egressos" element={<Placeholder name="Mapa dos Egressos" />} />
 
               <Route path="/perfil" element={
-                <ProtectedRoute><Placeholder name="Perfil" /></ProtectedRoute>
+                <ProtectedRoute><Perfil /></ProtectedRoute>
               } />
               <Route path="/banco-de-dados" element={
                 <ApprovedRoute><Placeholder name="Banco de Dados" /></ApprovedRoute>
