@@ -145,6 +145,8 @@ export function ProfileForm({ profile, onSubmit, loading }) {
     interests: profile?.interests ?? [],
     open_to_mentoring: profile?.open_to_mentoring ?? false,
     open_to_contact: profile?.open_to_contact ?? false,
+    show_email: profile?.show_email ?? false,
+    show_linkedin: profile?.show_linkedin ?? true,
   })
 
   function set(field, value) {
@@ -331,6 +333,28 @@ export function ProfileForm({ profile, onSubmit, loading }) {
             onCheckedChange={(v) => set('open_to_contact', v)}
           />
           <Label htmlFor="open_to_contact">Disponível para contato</Label>
+        </div>
+      </div>
+
+      {/* --- Visibilidade do contato --- */}
+      <SectionHeading>Visibilidade do contato</SectionHeading>
+      <p className="text-sm text-muted-foreground -mt-4">Escolha quais informações de contato são visíveis para outros alumni.</p>
+      <div className="flex flex-col gap-4 sm:flex-row">
+        <div className="flex items-center gap-3">
+          <Switch
+            id="show_email"
+            checked={form.show_email}
+            onCheckedChange={(v) => set('show_email', v)}
+          />
+          <Label htmlFor="show_email">Mostrar e-mail no perfil</Label>
+        </div>
+        <div className="flex items-center gap-3">
+          <Switch
+            id="show_linkedin"
+            checked={form.show_linkedin}
+            onCheckedChange={(v) => set('show_linkedin', v)}
+          />
+          <Label htmlFor="show_linkedin">Mostrar LinkedIn no perfil</Label>
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useAlumni } from '@/hooks/useAlumni'
 import { useAuth } from '@/contexts/AuthContext'
 import { AlumniCard } from '@/components/alumni/AlumniCard'
@@ -23,7 +23,12 @@ const defaultFilters = {
 }
 
 export default function BancoDeDados() {
-  const [filters, setFilters] = useState(defaultFilters)
+  const [searchParams] = useSearchParams()
+  const [filters, setFilters] = useState({
+    ...defaultFilters,
+    company: searchParams.get('company') || '',
+    sector: searchParams.get('sector') || '',
+  })
   const { isAuthenticated, isApproved } = useAuth()
   const anonymous = !isAuthenticated || !isApproved
 

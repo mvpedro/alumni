@@ -37,7 +37,23 @@
       "mcp__plugin_playwright_playwright__browser_fill_form",
       "mcp__plugin_playwright_playwright__browser_type",
       "Bash(python3:*)",
-      "Bash(SUPABASE_SERVICE_ROLE_KEY=\"***REDACTED_SERVICE_ROLE_KEY***\" node scripts/import-alumni.mjs)"
+      "Bash(SUPABASE_SERVICE_ROLE_KEY=\"***REDACTED_SERVICE_ROLE_KEY***\" node scripts/import-alumni.mjs)",
+      "mcp__plugin_playwright_playwright__browser_snapshot",
+      "Bash(__NEW_LINE_76348a1923e53122__ curl:*)",
+      "mcp__plugin_playwright_playwright__browser_run_code",
+      "mcp__plugin_playwright_playwright__browser_network_requests",
+      "Bash(python -c \"import chardet; print\\(chardet.detect\\(open\\(r''''C:\\\\Users\\\\pedro\\\\Documents\\\\work\\\\alumni\\\\docs\\\\Banco de Dados Oficial Alumni Automacao.csv'''', ''''rb''''\\).read\\(10000\\)\\)\\)\")",
+      "Bash(xxd)",
+      "Bash(SERVICE_KEY=\"***REDACTED_SERVICE_ROLE_KEY***\" __NEW_LINE_fdae0143ca07ba45__ curl -s \"https://vjceckswmormyvcspjyb.supabase.co/rest/v1/alumni?select=count\" -H \"apikey: $SERVICE_KEY\" -H \"Authorization: Bearer $SERVICE_KEY\" -H \"Prefer: count=exact\" -H \"Range-Unit: items\" -H \"Range: 0-0\" -D -)",
+      "Bash(__NEW_LINE_a54569a275796af7__ curl:*)",
+      "Bash(scp -P 2200 -r dist/* dist/.htaccess alumniautomacao@nfs.sites.ufsc.br:public_html/)",
+      "Bash(scp -P 2200 -o BatchMode=no -r dist/* dist/.htaccess alumniautomacao@nfs.sites.ufsc.br:public_html/)",
+      "Bash(python -c \"import paramiko; print\\(''''paramiko available''''\\)\")",
+      "Bash(pip install:*)",
+      "Bash(python -c \"import paramiko; print\\(''paramiko available''\\)\")",
+      "Bash(echo \"exit: $?\")",
+      "Bash(python -c \":*)",
+      "Bash(__NEW_LINE_1dd4bb1a25f7f1f9__ curl:*)"
     ]
   }
 }

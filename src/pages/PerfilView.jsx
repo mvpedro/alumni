@@ -137,12 +137,13 @@ export default function PerfilView() {
             </div>
           </div>
 
-          {/* Contact links */}
-          {(profile.linkedin_url || profile.contact_email) && (
+          {/* Contact links — respect visibility preferences */}
+          {((profile.linkedin_url && profile.show_linkedin !== false) ||
+            (profile.contact_email && profile.show_email)) && (
             <>
               <Separator className="my-4" />
               <div className="flex flex-wrap gap-3">
-                {profile.linkedin_url && (
+                {profile.linkedin_url && profile.show_linkedin !== false && (
                   <a
                     href={profile.linkedin_url}
                     target="_blank"
@@ -154,7 +155,7 @@ export default function PerfilView() {
                     </Button>
                   </a>
                 )}
-                {profile.contact_email && (
+                {profile.contact_email && profile.show_email && (
                   <a href={`mailto:${profile.contact_email}`}>
                     <Button variant="outline" size="sm">
                       <Mail className="mr-2 h-4 w-4" />
