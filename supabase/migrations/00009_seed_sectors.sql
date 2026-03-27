@@ -1,0 +1,15 @@
+insert into public.sectors (name, display_order) values
+  ('Fábrica e Indústria', 1),
+  ('Big Tech', 2),
+  ('Energia', 3),
+  ('Governo', 4),
+  ('Startups', 5),
+  ('Engenharia', 6),
+  ('Serviços', 7),
+  ('Automotivo', 8),
+  ('Aeroespacial', 9),
+  ('Mercado Financeiro', 10),
+  ('Software', 11),
+  ('Ensino e Pesquisa', 12),
+  ('Consultoria', 13),
+  ('Revista Federal', 14);
