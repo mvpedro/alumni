@@ -7,9 +7,11 @@ import { MainLayout } from '@/components/layout/MainLayout'
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute'
 import { ApprovedRoute } from '@/components/layout/ApprovedRoute'
 import { AdminRoute } from '@/components/layout/AdminRoute'
+import { AdminLayout } from '@/components/layout/AdminLayout'
 import Login from '@/pages/Login'
 import Cadastro from '@/pages/Cadastro'
 import Perfil from '@/pages/Perfil'
+import Dashboard from '@/pages/admin/Dashboard'
 
 function Placeholder({ name }) {
   return <div className="p-8 text-center text-lg">{name}</div>
@@ -42,20 +44,14 @@ export default function App() {
               } />
 
               <Route path="/admin" element={
-                <AdminRoute><Placeholder name="Admin Dashboard" /></AdminRoute>
-              } />
-              <Route path="/admin/usuarios" element={
-                <AdminRoute><Placeholder name="Admin Usuarios" /></AdminRoute>
-              } />
-              <Route path="/admin/empresas" element={
-                <AdminRoute><Placeholder name="Admin Empresas" /></AdminRoute>
-              } />
-              <Route path="/admin/setores" element={
-                <AdminRoute><Placeholder name="Admin Setores" /></AdminRoute>
-              } />
-              <Route path="/admin/contato" element={
-                <AdminRoute><Placeholder name="Admin Contato" /></AdminRoute>
-              } />
+                <AdminRoute><AdminLayout /></AdminRoute>
+              }>
+                <Route index element={<Dashboard />} />
+                <Route path="usuarios" element={<Placeholder name="Admin Usuários" />} />
+                <Route path="empresas" element={<Placeholder name="Admin Empresas" />} />
+                <Route path="setores" element={<Placeholder name="Admin Setores" />} />
+                <Route path="contato" element={<Placeholder name="Admin Contato" />} />
+              </Route>
 
               <Route path="*" element={<Placeholder name="404 — Página não encontrada" />} />
             </Route>
