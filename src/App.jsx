@@ -17,6 +17,8 @@ import PerfilView from '@/pages/PerfilView'
 import MapaDosEgressos from '@/pages/MapaDosEgressos'
 import Landing from '@/pages/Landing'
 import Contato from '@/pages/Contato'
+import Entrevistas from '@/pages/Entrevistas'
+import EntrevistaPost from '@/pages/EntrevistaPost'
 import Dashboard from '@/pages/admin/Dashboard'
 import Usuarios from '@/pages/admin/Usuarios'
 import Empresas from '@/pages/admin/Empresas'
@@ -49,6 +51,8 @@ export default function App() {
                 <Route path="/" element={<Landing />} />
                 <Route path="/contato" element={<Contato />} />
                 <Route path="/mapa-dos-egressos" element={<MapaDosEgressos />} />
+                <Route path="/entrevistas" element={<Entrevistas />} />
+                <Route path="/entrevistas/:slug" element={<EntrevistaPost />} />
 
                 <Route path="/perfil" element={
                   <ProtectedRoute><Perfil /></ProtectedRoute>

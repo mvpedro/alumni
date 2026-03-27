@@ -9,6 +9,7 @@ const publicLinks = [
   { to: '/', label: 'Home' },
   { to: '/banco-de-dados', label: 'Banco de Dados' },
   { to: '/mapa-dos-egressos', label: 'Mapa dos Egressos' },
+  { to: '/entrevistas', label: 'Entrevistas' },
   { to: '/contato', label: 'Contato' },
 ]
 
