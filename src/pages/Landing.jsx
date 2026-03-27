@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { Users, MapPin, Building2, ArrowRight, LayoutGrid, Newspaper } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PostCard } from '@/components/blog/PostCard'
@@ -42,28 +43,25 @@ function useRecentPosts() {
 }
 
 const stats = [
-  { key: 'alumni', label: 'Alumni cadastrados', icon: Users },
-  { key: 'companies', label: 'Empresas representadas', icon: Building2 },
-  { key: 'sectors', label: 'Setores de atuação', icon: LayoutGrid },
+  { key: 'alumni', label: 'Alumni cadastrados' },
+  { key: 'companies', label: 'Empresas representadas' },
+  { key: 'sectors', label: 'Setores de atuação' },
 ]
 
 const features = [
   {
-    icon: Users,
     title: 'Banco de Dados',
     description: 'Encontre colegas egressos, filtre por setor, empresa ou cidade e conecte-se com mentores.',
     to: '/banco-de-dados',
     cta: 'Explorar alumni',
   },
   {
-    icon: MapPin,
     title: 'Mapa dos Egressos',
     description: 'Visualize a distribuição dos egressos por empresa, setor e região do Brasil.',
     to: '/mapa-dos-egressos',
     cta: 'Ver mapa',
   },
   {
-    icon: Building2,
     title: 'Contato',
     description: 'Entre em contato com a coordenação do curso ou com a rede de alumni.',
     to: '/contato',
@@ -72,52 +70,59 @@ const features = [
 ]
 
 export default function Landing() {
+  const { isAuthenticated } = useAuth()
   const { data: statsData, isLoading } = useLandingStats()
   const { data: recentPosts = [] } = useRecentPosts()
 
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-primary/10 py-24 text-center sm:py-28">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-primary/80 py-24 text-center sm:py-28">
         <div className="container mx-auto px-4">
           <img src="/alumni-logo.png" alt="" className="mx-auto mb-6 h-24 w-auto" />
-          <h1 className="text-4xl font-bold tracking-tight text-primary sm:text-5xl md:text-6xl">
+          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
             Alumni Automação UFSC
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-300">
             A rede de egressos do curso de Engenharia de Controle e Automação da UFSC. Conecte-se, explore trajetórias e inspire-se.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Button asChild size="lg">
-              <Link to="/cadastro">Cadastre-se</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link to="/mapa-dos-egressos">Ver Mapa</Link>
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <Button asChild size="lg" className="bg-white text-slate-900 hover:bg-slate-100">
+                  <Link to="/banco-de-dados">Ver Banco de Dados</Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                  <Link to="/perfil">Meu Perfil</Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button asChild size="lg" className="bg-white text-slate-900 hover:bg-slate-100">
+                  <Link to="/cadastro">Cadastre-se</Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                  <Link to="/mapa-dos-egressos">Ver Mapa</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </section>
 
       {/* Stats */}
-      <section className="bg-muted/50 py-16">
+      <section className="border-y bg-muted/50 py-12">
         <div className="container mx-auto px-4">
           <div className="grid gap-6 sm:grid-cols-3">
             {stats.map((stat) => (
-              <Card key={stat.key}>
-                <CardContent className="flex items-center gap-4 p-6">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <stat.icon className="h-6 w-6" />
-                  </div>
-                  <div>
-                    {isLoading ? (
-                      <Skeleton className="mb-1 h-8 w-16" />
-                    ) : (
-                      <p className="text-3xl font-bold">{statsData?.[stat.key] ?? 0}</p>
-                    )}
-                    <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <div key={stat.key} className="text-center">
+                {isLoading ? (
+                  <Skeleton className="mx-auto mb-1 h-10 w-20" />
+                ) : (
+                  <p className="text-4xl font-bold text-foreground">{statsData?.[stat.key] ?? 0}</p>
+                )}
+                <p className="mt-1 text-sm text-muted-foreground">{stat.label}</p>
+              </div>
             ))}
           </div>
         </div>
@@ -129,11 +134,8 @@ export default function Landing() {
           <h2 className="mb-10 text-center text-2xl font-bold tracking-tight">Explore a rede</h2>
           <div className="grid gap-6 sm:grid-cols-3">
             {features.map((feat) => (
-              <Card key={feat.to} className="flex flex-col transition-shadow hover:shadow-md">
+              <Card key={feat.to} className="flex flex-col transition-colors hover:bg-muted/40">
                 <CardHeader>
-                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <feat.icon className="h-5 w-5" />
-                  </div>
                   <CardTitle className="text-lg">{feat.title}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-1 flex-col justify-between gap-4">

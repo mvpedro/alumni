@@ -1,18 +1,14 @@
 import { useNavigate } from 'react-router-dom'
 import { Users, Building2, LayoutGrid, GraduationCap } from 'lucide-react'
-import { useAuth } from '@/contexts/AuthContext'
 import { useMapaStats } from '@/hooks/useMapaStats'
 import { StatCard } from '@/components/mapa/StatCard'
 import { MapaCharts } from '@/components/mapa/MapaCharts'
 import { LogoCluster } from '@/components/mapa/LogoCluster'
 import { PageHeader } from '@/components/common/PageHeader'
 import { EmptyState } from '@/components/common/EmptyState'
-import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Link } from 'react-router-dom'
 
 export default function MapaDosEgressos() {
-  const { isAuthenticated, isApproved } = useAuth()
   const { data: stats, isLoading } = useMapaStats()
   const navigate = useNavigate()
 
@@ -51,9 +47,29 @@ export default function MapaDosEgressos() {
         )}
       </div>
 
+      {/* Logo cluster — hero section, public */}
+      <div className="mb-10">
+        <h2 className="mb-4 text-xl font-semibold">Empresas dos Egressos</h2>
+        {isLoading ? (
+          <div className="flex flex-wrap gap-4">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 w-24 rounded-lg" />
+            ))}
+          </div>
+        ) : stats?.logoCluster?.length > 0 ? (
+          <LogoCluster logoCluster={stats.logoCluster} onClick={handleLogoClick} />
+        ) : (
+          <EmptyState
+            icon={Building2}
+            title="Nenhuma empresa cadastrada"
+            description="As empresas dos egressos aparecerão aqui assim que forem cadastradas."
+          />
+        )}
+      </div>
+
       {/* Charts */}
       {isLoading ? (
-        <div className="mb-10 grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-2">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className={`rounded-xl border p-6 ${i === 2 ? 'lg:col-span-2' : ''}`}>
               <Skeleton className="mb-4 h-5 w-40" />
@@ -62,50 +78,12 @@ export default function MapaDosEgressos() {
           ))}
         </div>
       ) : stats ? (
-        <div className="mb-10">
-          <MapaCharts
-            alumniPerSector={stats.alumniPerSector}
-            alumniPerClass={stats.alumniPerClass}
-            alumniPerState={stats.alumniPerState}
-          />
-        </div>
+        <MapaCharts
+          alumniPerSector={stats.alumniPerSector}
+          alumniPerClass={stats.alumniPerClass}
+          alumniPerState={stats.alumniPerState}
+        />
       ) : null}
-
-      {/* Logo cluster */}
-      <div>
-        <h2 className="mb-4 text-xl font-semibold">Empresas dos Egressos</h2>
-        {isAuthenticated && isApproved ? (
-          isLoading ? (
-            <div className="flex flex-wrap gap-4">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <Skeleton key={i} className="h-16 w-16 rounded-lg" />
-              ))}
-            </div>
-          ) : stats?.logoCluster?.length > 0 ? (
-            <LogoCluster logoCluster={stats.logoCluster} onClick={handleLogoClick} />
-          ) : (
-            <EmptyState
-              icon={Building2}
-              title="Nenhuma empresa cadastrada"
-              description="As empresas dos egressos aparecerão aqui assim que forem cadastradas."
-            />
-          )
-        ) : (
-          <div className="rounded-lg border border-dashed p-10 text-center">
-            <p className="text-muted-foreground">
-              Faça login e tenha seu cadastro aprovado para ver as empresas dos egressos.
-            </p>
-            <div className="mt-4 flex justify-center gap-3">
-              <Button asChild variant="outline">
-                <Link to="/login">Entrar</Link>
-              </Button>
-              <Button asChild>
-                <Link to="/cadastro">Cadastrar-se</Link>
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   )
 }

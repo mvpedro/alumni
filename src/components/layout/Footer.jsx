@@ -18,7 +18,9 @@ export function Footer() {
           {/* Column 1: Brand */}
           <div>
             <div className="mb-3 flex items-center gap-2">
-              <img src="/alumni-logo.png" alt="Alumni Automação" className="h-8 w-auto" />
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-900">
+                <img src="/alumni-logo.png" alt="Alumni Automação" className="h-6 w-auto" />
+              </span>
               <span className="font-semibold text-foreground">Alumni Automação</span>
             </div>
             <p className="text-sm leading-relaxed text-muted-foreground">

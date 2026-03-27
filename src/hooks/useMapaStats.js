@@ -11,7 +11,7 @@ export function useMapaStats() {
           .select('id, entry_class, state, company_id, company:companies(id, sector_id)'),
         supabase
           .from('companies')
-          .select('id, name, logo_url, alumni_count, sector_id, sector:sectors(id, name)')
+          .select('id, name, logo_url, sector_id, sector:sectors(id, name)')
           .eq('status', 'approved'),
         supabase
           .from('sectors')
@@ -70,20 +70,30 @@ export function useMapaStats() {
         .sort((a, b) => b.count - a.count)
         .slice(0, 10)
 
-      // Logo cluster — group companies by sector, sorted by alumni_count
+      // Compute alumni count per company from profiles data
+      const alumniPerCompany = {}
+      profiles.forEach((p) => {
+        if (p.company_id) {
+          alumniPerCompany[p.company_id] = (alumniPerCompany[p.company_id] ?? 0) + 1
+        }
+      })
+
+      // Logo cluster — group companies by sector, sorted by alumni count
+      const UNCATEGORIZED = '__uncategorized__'
       const sectorMap = {}
       sectors.forEach((s) => {
         sectorMap[s.id] = { id: s.id, name: s.name, companies: [] }
       })
+      sectorMap[UNCATEGORIZED] = { id: UNCATEGORIZED, name: 'Não classificado', companies: [] }
+
       companies.forEach((c) => {
-        if (c.sector_id && sectorMap[c.sector_id]) {
-          sectorMap[c.sector_id].companies.push({
-            id: c.id,
-            name: c.name,
-            logo_url: c.logo_url,
-            alumni_count: c.alumni_count ?? 0,
-          })
-        }
+        const bucket = c.sector_id && sectorMap[c.sector_id] ? c.sector_id : UNCATEGORIZED
+        sectorMap[bucket].companies.push({
+          id: c.id,
+          name: c.name,
+          logo_url: c.logo_url,
+          alumni_count: alumniPerCompany[c.id] ?? 0,
+        })
       })
       const logoCluster = Object.values(sectorMap)
         .filter((s) => s.companies.length > 0)
