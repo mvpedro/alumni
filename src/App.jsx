@@ -12,6 +12,7 @@ import Login from '@/pages/Login'
 import Cadastro from '@/pages/Cadastro'
 import Perfil from '@/pages/Perfil'
 import Dashboard from '@/pages/admin/Dashboard'
+import Usuarios from '@/pages/admin/Usuarios'
 
 function Placeholder({ name }) {
   return <div className="p-8 text-center text-lg">{name}</div>
@@ -47,7 +48,7 @@ export default function App() {
                 <AdminRoute><AdminLayout /></AdminRoute>
               }>
                 <Route index element={<Dashboard />} />
-                <Route path="usuarios" element={<Placeholder name="Admin Usuários" />} />
+                <Route path="usuarios" element={<Usuarios />} />
                 <Route path="empresas" element={<Placeholder name="Admin Empresas" />} />
                 <Route path="setores" element={<Placeholder name="Admin Setores" />} />
                 <Route path="contato" element={<Placeholder name="Admin Contato" />} />
