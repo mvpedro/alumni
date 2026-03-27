@@ -188,13 +188,12 @@ async function main() {
   // ------------------------------------------------------------------
   // 1. Parse CSV
   // ------------------------------------------------------------------
-  const csvBuffer = readFileSync(CSV_PATH)
-  const records = parse(csvBuffer, {
+  const csvText = readFileSync(CSV_PATH, 'utf-8')
+  const records = parse(csvText, {
     columns: false,      // indexed by position
     skip_empty_lines: true,
     from_line: 2,        // skip header row
     relax_column_count: true,
-    encoding: 'latin1',
   })
 
   console.log(`Parsed ${records.length} rows from CSV`)
