@@ -55,6 +55,7 @@ export default function Landing() {
       {/* Hero */}
       <section className="bg-background py-20 text-center">
         <div className="container mx-auto px-4">
+          <img src="/alumni-logo.png" alt="" className="mx-auto mb-6 h-24 w-auto" />
           <h1 className="text-4xl font-bold text-primary sm:text-5xl md:text-6xl">
             Alumni Automação UFSC
           </h1>

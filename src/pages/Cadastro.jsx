@@ -55,6 +55,8 @@ export default function Cadastro() {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
+      <div className="w-full max-w-md">
+      <img src="/alumni-logo.png" alt="Alumni Automação UFSC" className="mx-auto mb-6 h-16 w-auto" />
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Cadastro</CardTitle>
@@ -90,6 +92,7 @@ export default function Cadastro() {
           </form>
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 }

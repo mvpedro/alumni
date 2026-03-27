@@ -39,7 +39,8 @@ export function Navbar() {
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 font-bold text-primary">
-          Alumni Automação
+          <img src="/alumni-logo.png" alt="Alumni Automação" className="h-8 w-auto" />
+          <span className="hidden sm:inline">Alumni Automação</span>
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
           <NavLinks />
