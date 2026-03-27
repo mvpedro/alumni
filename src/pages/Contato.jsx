@@ -29,7 +29,7 @@ export default function Contato() {
 
   if (success) {
     return (
-      <div className="container mx-auto max-w-lg px-4 py-16 text-center">
+      <div className="container mx-auto max-w-lg px-4 py-20 text-center">
         <CheckCircle className="mx-auto mb-4 h-12 w-12 text-green-500" />
         <h1 className="text-2xl font-bold">Mensagem enviada!</h1>
         <p className="mt-2 text-muted-foreground">
@@ -43,10 +43,10 @@ export default function Contato() {
   }
 
   return (
-    <div className="container mx-auto max-w-lg px-4 py-8">
+    <div className="container mx-auto max-w-lg px-4 py-10">
       <Card>
         <CardHeader>
-          <CardTitle>Contato</CardTitle>
+          <CardTitle className="text-2xl">Contato</CardTitle>
           <CardDescription>
             Envie uma mensagem para a equipe Alumni Automação UFSC.
           </CardDescription>

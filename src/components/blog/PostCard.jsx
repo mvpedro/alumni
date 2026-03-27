@@ -12,7 +12,7 @@ export function PostCard({ post }) {
 
   return (
     <Link to={`/entrevistas/${post.slug}`} className="group block">
-      <Card className="overflow-hidden transition-shadow hover:shadow-md">
+      <Card className="overflow-hidden border transition-all hover:shadow-md hover:border-primary/20">
         {/* Cover image or gradient placeholder */}
         {post.cover_image_url ? (
           <img

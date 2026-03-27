@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
 
 function usePublicProfile(id) {
   return useQuery({
@@ -30,9 +31,25 @@ export default function PerfilView() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto max-w-3xl px-4 py-8">
-        <div className="h-8 w-32 animate-pulse rounded bg-muted" />
-        <div className="mt-6 h-48 animate-pulse rounded-lg bg-muted" />
+      <div className="container mx-auto max-w-3xl px-4 py-10">
+        <Skeleton className="mb-6 h-8 w-36" />
+        <div className="rounded-xl border p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+            <Skeleton className="h-20 w-20 rounded-full" />
+            <div className="flex-1 space-y-3">
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-4 w-32" />
+              <div className="flex gap-4">
+                <Skeleton className="h-4 w-28" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="mt-6 rounded-xl border p-6">
+          <Skeleton className="mb-3 h-5 w-16" />
+          <Skeleton className="h-20 w-full" />
+        </div>
       </div>
     )
   }
@@ -57,7 +74,7 @@ export default function PerfilView() {
   const careerHistory = Array.isArray(profile.career_history) ? profile.career_history : []
 
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-8">
+    <div className="container mx-auto max-w-3xl px-4 py-10">
       <Button asChild variant="ghost" className="mb-6 -ml-2">
         <Link to="/banco-de-dados">
           <ArrowLeft className="mr-1 h-4 w-4" />

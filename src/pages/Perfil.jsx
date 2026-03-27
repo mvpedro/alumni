@@ -4,6 +4,7 @@ import { Camera } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useUpdateProfile, useUploadAvatar } from '@/hooks/useProfile'
 import { ProfileForm } from '@/components/alumni/ProfileForm'
+import { PageHeader } from '@/components/common/PageHeader'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -45,9 +46,9 @@ export default function Perfil() {
   }
 
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-8">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Meu Perfil</h1>
+    <div className="container mx-auto max-w-3xl px-4 py-10">
+      <div className="mb-8 flex items-center justify-between">
+        <PageHeader title="Meu Perfil" />
         <Badge variant={status.variant}>{status.label}</Badge>
       </div>
 

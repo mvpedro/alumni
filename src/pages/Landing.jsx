@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { Users, MapPin, Building2, ArrowRight } from 'lucide-react'
+import { Users, MapPin, Building2, ArrowRight, LayoutGrid, Newspaper } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { PostCard } from '@/components/blog/PostCard'
+import { Skeleton } from '@/components/ui/skeleton'
 
 function useLandingStats() {
   return useQuery({
@@ -22,6 +24,28 @@ function useLandingStats() {
     },
   })
 }
+
+function useRecentPosts() {
+  return useQuery({
+    queryKey: ['recent-posts'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('interviews')
+        .select('id, title, slug, excerpt, cover_image_url, published_at')
+        .eq('published', true)
+        .order('published_at', { ascending: false })
+        .limit(3)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+const stats = [
+  { key: 'alumni', label: 'Alumni cadastrados', icon: Users },
+  { key: 'companies', label: 'Empresas representadas', icon: Building2 },
+  { key: 'sectors', label: 'Setores de atuação', icon: LayoutGrid },
+]
 
 const features = [
   {
@@ -48,15 +72,16 @@ const features = [
 ]
 
 export default function Landing() {
-  const { data: stats, isLoading } = useLandingStats()
+  const { data: statsData, isLoading } = useLandingStats()
+  const { data: recentPosts = [] } = useRecentPosts()
 
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="bg-background py-20 text-center">
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-primary/10 py-24 text-center sm:py-28">
         <div className="container mx-auto px-4">
           <img src="/alumni-logo.png" alt="" className="mx-auto mb-6 h-24 w-auto" />
-          <h1 className="text-4xl font-bold text-primary sm:text-5xl md:text-6xl">
+          <h1 className="text-4xl font-bold tracking-tight text-primary sm:text-5xl md:text-6xl">
             Alumni Automação UFSC
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -74,38 +99,37 @@ export default function Landing() {
       </section>
 
       {/* Stats */}
-      <section className="bg-muted/50 py-12">
+      <section className="bg-muted/50 py-16">
         <div className="container mx-auto px-4">
-          <div className="grid gap-6 sm:grid-cols-3 text-center">
-            <div>
-              <p className="text-4xl font-bold text-primary">
-                {isLoading ? '—' : stats?.alumni}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">Alumni cadastrados</p>
-            </div>
-            <div>
-              <p className="text-4xl font-bold text-primary">
-                {isLoading ? '—' : stats?.companies}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">Empresas representadas</p>
-            </div>
-            <div>
-              <p className="text-4xl font-bold text-primary">
-                {isLoading ? '—' : stats?.sectors}
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">Setores de atuação</p>
-            </div>
+          <div className="grid gap-6 sm:grid-cols-3">
+            {stats.map((stat) => (
+              <Card key={stat.key}>
+                <CardContent className="flex items-center gap-4 p-6">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <stat.icon className="h-6 w-6" />
+                  </div>
+                  <div>
+                    {isLoading ? (
+                      <Skeleton className="mb-1 h-8 w-16" />
+                    ) : (
+                      <p className="text-3xl font-bold">{statsData?.[stat.key] ?? 0}</p>
+                    )}
+                    <p className="text-sm text-muted-foreground">{stat.label}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Feature cards */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="container mx-auto px-4">
-          <h2 className="mb-10 text-center text-2xl font-bold">Explore a rede</h2>
+          <h2 className="mb-10 text-center text-2xl font-bold tracking-tight">Explore a rede</h2>
           <div className="grid gap-6 sm:grid-cols-3">
             {features.map((feat) => (
-              <Card key={feat.to} className="flex flex-col">
+              <Card key={feat.to} className="flex flex-col transition-shadow hover:shadow-md">
                 <CardHeader>
                   <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <feat.icon className="h-5 w-5" />
@@ -127,6 +151,41 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
+      {/* Recent Interviews */}
+      {recentPosts.length > 0 && (
+        <section className="border-t bg-muted/30 py-20">
+          <div className="container mx-auto px-4">
+            <div className="mb-10 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight">Últimas Entrevistas</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Conversas com egressos sobre suas trajetórias.
+                </p>
+              </div>
+              <Button asChild variant="outline" size="sm" className="hidden sm:flex">
+                <Link to="/entrevistas">
+                  Ver todas
+                  <ArrowRight className="ml-1.5 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {recentPosts.map((post) => (
+                <PostCard key={post.id} post={post} />
+              ))}
+            </div>
+            <div className="mt-8 text-center sm:hidden">
+              <Button asChild variant="outline" size="sm">
+                <Link to="/entrevistas">
+                  Ver todas as entrevistas
+                  <ArrowRight className="ml-1.5 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   )
 }

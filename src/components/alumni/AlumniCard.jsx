@@ -12,7 +12,7 @@ export function AlumniCard({ alumni, anonymous = false }) {
   const location = [alumni.city, alumni.state].filter(Boolean).join(', ')
 
   const content = (
-    <Card className="h-full transition-shadow hover:shadow-md">
+    <Card className="h-full border transition-all hover:shadow-md hover:border-primary/20">
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
           <Avatar className="h-12 w-12 shrink-0">

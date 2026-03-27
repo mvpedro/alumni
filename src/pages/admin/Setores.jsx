@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function Setores() {
   const { data: sectors = [], isLoading } = useSectors()
@@ -75,14 +76,16 @@ export default function Setores() {
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={3} className="text-center text-muted-foreground">
-                  Carregando...
-                </TableCell>
-              </TableRow>
+              Array.from({ length: 4 }).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell><Skeleton className="h-4 w-8" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                  <TableCell className="text-right"><Skeleton className="ml-auto h-8 w-8" /></TableCell>
+                </TableRow>
+              ))
             ) : sectors.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={3} className="text-center text-muted-foreground">
+                <TableCell colSpan={3} className="py-8 text-center text-muted-foreground">
                   Nenhum setor cadastrado.
                 </TableCell>
               </TableRow>

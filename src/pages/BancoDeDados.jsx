@@ -6,8 +6,11 @@ import { AlumniCard } from '@/components/alumni/AlumniCard'
 import { AlumniFilters } from '@/components/alumni/AlumniFilters'
 import { SearchBar } from '@/components/common/SearchBar'
 import { Pagination } from '@/components/common/Pagination'
+import { PageHeader } from '@/components/common/PageHeader'
+import { EmptyState } from '@/components/common/EmptyState'
 import { Button } from '@/components/ui/button'
-import { Lock } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Lock, SearchX } from 'lucide-react'
 
 const defaultFilters = {
   search: '',
@@ -39,8 +42,11 @@ export default function BancoDeDados() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold">Banco de Dados</h1>
+    <div className="container mx-auto px-4 py-10">
+      <PageHeader
+        title="Banco de Dados"
+        description="Explore os perfis dos egressos de Engenharia de Controle e Automação."
+      />
 
       {anonymous && (
         <div className="mb-6 flex items-center gap-3 rounded-lg border bg-muted/50 p-4">
@@ -69,19 +75,37 @@ export default function BancoDeDados() {
 
         <div className="flex-1">
           <div className="mb-4 text-sm text-muted-foreground">
-            {isLoading ? 'Carregando...' : `${total} ${total === 1 ? 'resultado' : 'resultados'}`}
+            {isLoading ? (
+              <Skeleton className="h-4 w-24" />
+            ) : (
+              `${total} ${total === 1 ? 'resultado' : 'resultados'}`
+            )}
           </div>
 
           {isLoading ? (
             <div className="grid gap-4 sm:grid-cols-2">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-36 animate-pulse rounded-lg bg-muted" />
+                <div key={i} className="rounded-xl border p-4">
+                  <div className="flex items-start gap-3">
+                    <Skeleton className="h-12 w-12 rounded-full" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-3 w-1/2" />
+                    </div>
+                  </div>
+                  <div className="mt-3 space-y-2">
+                    <Skeleton className="h-3 w-2/3" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
+                </div>
               ))}
             </div>
           ) : alumni.length === 0 ? (
-            <div className="rounded-lg border border-dashed p-12 text-center text-muted-foreground">
-              Nenhum alumni encontrado com os filtros selecionados.
-            </div>
+            <EmptyState
+              icon={SearchX}
+              title="Nenhum alumni encontrado"
+              description="Tente ajustar os filtros ou buscar por um termo diferente."
+            />
           ) : (
             <div className="grid gap-4 sm:grid-cols-2">
               {alumni.map((a) => (

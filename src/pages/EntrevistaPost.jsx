@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { useInterview } from '@/hooks/useInterviews'
 import { PostContent } from '@/components/blog/PostContent'
+import { Skeleton } from '@/components/ui/skeleton'
 import { ArrowLeft } from 'lucide-react'
 
 export default function EntrevistaPost() {
@@ -11,7 +12,19 @@ export default function EntrevistaPost() {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <p className="text-muted-foreground">Carregando...</p>
+        <Skeleton className="mb-8 h-4 w-40" />
+        <Skeleton className="mb-8 h-64 w-full rounded-lg" />
+        <div className="mx-auto max-w-3xl space-y-4">
+          <Skeleton className="h-8 w-3/4" />
+          <Skeleton className="h-4 w-32" />
+          <div className="space-y-2 pt-4">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-2/3" />
+          </div>
+        </div>
       </div>
     )
   }

@@ -19,6 +19,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { UserActions } from '@/components/admin/UserActions'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const statusVariant = {
   pending: 'secondary',
@@ -97,11 +98,15 @@ export default function Usuarios() {
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground">
-                  Carregando...
-                </TableCell>
-              </TableRow>
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell><div className="space-y-1"><Skeleton className="h-4 w-28" /><Skeleton className="h-3 w-36" /></div></TableCell>
+                  <TableCell className="hidden sm:table-cell"><Skeleton className="h-4 w-12" /></TableCell>
+                  <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
+                  <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-12" /></TableCell>
+                  <TableCell className="text-right"><Skeleton className="ml-auto h-8 w-8" /></TableCell>
+                </TableRow>
+              ))
             ) : filtered.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center text-muted-foreground">

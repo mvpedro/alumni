@@ -30,6 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Skeleton } from '@/components/ui/skeleton'
 
 // ─── Approved tab (Tasks 4 + 5) ─────────────────────────────────────────────
 
@@ -147,14 +148,17 @@ function ApprovedTab() {
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground">
-                  Carregando...
-                </TableCell>
-              </TableRow>
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell><Skeleton className="h-8 w-8 rounded" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                  <TableCell className="hidden sm:table-cell"><Skeleton className="h-7 w-36" /></TableCell>
+                  <TableCell className="text-right"><Skeleton className="ml-auto h-8 w-8" /></TableCell>
+                </TableRow>
+              ))
             ) : filtered.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground">
+                <TableCell colSpan={4} className="py-8 text-center text-muted-foreground">
                   Nenhuma empresa encontrada.
                 </TableCell>
               </TableRow>
@@ -272,14 +276,17 @@ function PendingTab() {
         </TableHeader>
         <TableBody>
           {isLoading ? (
-            <TableRow>
-              <TableCell colSpan={4} className="text-center text-muted-foreground">
-                Carregando...
-              </TableCell>
-            </TableRow>
+            Array.from({ length: 3 }).map((_, i) => (
+              <TableRow key={i}>
+                <TableCell><Skeleton className="h-4 w-28" /></TableCell>
+                <TableCell className="hidden sm:table-cell"><Skeleton className="h-4 w-20" /></TableCell>
+                <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-32" /></TableCell>
+                <TableCell className="text-right"><Skeleton className="ml-auto h-8 w-16" /></TableCell>
+              </TableRow>
+            ))
           ) : pending.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={4} className="text-center text-muted-foreground">
+              <TableCell colSpan={4} className="py-8 text-center text-muted-foreground">
                 Nenhuma empresa pendente.
               </TableCell>
             </TableRow>

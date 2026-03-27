@@ -18,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function TrabalhoAlumniAdmin() {
   const { data: videos = [], isLoading } = useTrabalhoAlumni()
@@ -93,14 +94,18 @@ export default function TrabalhoAlumniAdmin() {
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground">
-                  Carregando...
-                </TableCell>
-              </TableRow>
+              Array.from({ length: 4 }).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                  <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-40" /></TableCell>
+                  <TableCell className="text-center"><Skeleton className="mx-auto h-4 w-8" /></TableCell>
+                  <TableCell className="hidden sm:table-cell"><Skeleton className="h-5 w-20 rounded-full" /></TableCell>
+                  <TableCell className="text-right"><Skeleton className="ml-auto h-8 w-16" /></TableCell>
+                </TableRow>
+              ))
             ) : videos.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground">
+                <TableCell colSpan={5} className="py-8 text-center text-muted-foreground">
                   Nenhum vídeo cadastrado.
                 </TableCell>
               </TableRow>

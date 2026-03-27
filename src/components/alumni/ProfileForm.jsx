@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
+import { Separator } from '@/components/ui/separator'
 import {
   Select,
   SelectContent,
@@ -22,6 +23,17 @@ import {
 import { TagInput } from '@/components/common/TagInput'
 import { useCompanies, useSuggestCompany } from '@/hooks/useCompanies'
 import { useSectors } from '@/hooks/useSectors'
+
+function SectionHeading({ children }) {
+  return (
+    <div>
+      <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+        {children}
+      </h3>
+      <Separator className="mt-2" />
+    </div>
+  )
+}
 
 function SuggestCompanyDialog({ open, onOpenChange }) {
   const { data: sectors = [] } = useSectors()
@@ -145,8 +157,9 @@ export function ProfileForm({ profile, onSubmit, loading }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Informações pessoais */}
+    <form onSubmit={handleSubmit} className="space-y-8">
+      {/* --- Informações pessoais --- */}
+      <SectionHeading>Informações pessoais</SectionHeading>
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="full_name">Nome completo</Label>
@@ -186,7 +199,8 @@ export function ProfileForm({ profile, onSubmit, loading }) {
         </div>
       </div>
 
-      {/* Empresa e cargo */}
+      {/* --- Profissional --- */}
+      <SectionHeading>Profissional</SectionHeading>
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="company_id">Empresa</Label>
@@ -225,46 +239,6 @@ export function ProfileForm({ profile, onSubmit, loading }) {
         </div>
       </div>
 
-      {/* Localização */}
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div className="space-y-1.5">
-          <Label htmlFor="city">Cidade</Label>
-          <Input
-            id="city"
-            value={form.city}
-            onChange={(e) => set('city', e.target.value)}
-          />
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="state">Estado</Label>
-          <Input
-            id="state"
-            value={form.state}
-            onChange={(e) => set('state', e.target.value)}
-          />
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="country">País</Label>
-          <Input
-            id="country"
-            value={form.country}
-            onChange={(e) => set('country', e.target.value)}
-          />
-        </div>
-      </div>
-
-      {/* LinkedIn */}
-      <div className="space-y-1.5">
-        <Label htmlFor="linkedin_url">LinkedIn</Label>
-        <Input
-          id="linkedin_url"
-          type="url"
-          value={form.linkedin_url}
-          onChange={(e) => set('linkedin_url', e.target.value)}
-          placeholder="https://linkedin.com/in/seu-perfil"
-        />
-      </div>
-
       {/* Bio */}
       <div className="space-y-1.5">
         <Label htmlFor="bio">Bio</Label>
@@ -297,7 +271,50 @@ export function ProfileForm({ profile, onSubmit, loading }) {
         </div>
       </div>
 
-      {/* Switches */}
+      {/* --- Contato --- */}
+      <SectionHeading>Contato</SectionHeading>
+      <div className="space-y-1.5">
+        <Label htmlFor="linkedin_url">LinkedIn</Label>
+        <Input
+          id="linkedin_url"
+          type="url"
+          value={form.linkedin_url}
+          onChange={(e) => set('linkedin_url', e.target.value)}
+          placeholder="https://linkedin.com/in/seu-perfil"
+        />
+      </div>
+
+      {/* --- Localização --- */}
+      <SectionHeading>Localização</SectionHeading>
+      <div className="grid gap-4 sm:grid-cols-3">
+        <div className="space-y-1.5">
+          <Label htmlFor="city">Cidade</Label>
+          <Input
+            id="city"
+            value={form.city}
+            onChange={(e) => set('city', e.target.value)}
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="state">Estado</Label>
+          <Input
+            id="state"
+            value={form.state}
+            onChange={(e) => set('state', e.target.value)}
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="country">País</Label>
+          <Input
+            id="country"
+            value={form.country}
+            onChange={(e) => set('country', e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* --- Preferências --- */}
+      <SectionHeading>Preferências</SectionHeading>
       <div className="flex flex-col gap-4 sm:flex-row">
         <div className="flex items-center gap-3">
           <Switch
