@@ -30,7 +30,14 @@
       "Bash(curl:*)",
       "Bash(SERVICE_KEY=\"***REDACTED_SERVICE_ROLE_KEY***\")",
       "Bash(__NEW_LINE_f21808af0a1ac38c__ curl:*)",
-      "Bash(__NEW_LINE_fc860cec360077b0__ curl:*)"
+      "Bash(__NEW_LINE_fc860cec360077b0__ curl:*)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_console_messages",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "mcp__plugin_playwright_playwright__browser_fill_form",
+      "mcp__plugin_playwright_playwright__browser_type",
+      "Bash(python3:*)",
+      "Bash(SUPABASE_SERVICE_ROLE_KEY=\"***REDACTED_SERVICE_ROLE_KEY***\" node scripts/import-alumni.mjs)"
     ]
   }
 }
