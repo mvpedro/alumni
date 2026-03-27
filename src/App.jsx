@@ -22,6 +22,7 @@ import Usuarios from '@/pages/admin/Usuarios'
 import Empresas from '@/pages/admin/Empresas'
 import Setores from '@/pages/admin/Setores'
 import ContatoAdmin from '@/pages/admin/ContatoAdmin'
+import EntrevistasAdmin from '@/pages/admin/EntrevistasAdmin'
 
 function NotFound() {
   return (
@@ -65,6 +66,7 @@ export default function App() {
                   <Route path="empresas" element={<Empresas />} />
                   <Route path="setores" element={<Setores />} />
                   <Route path="contato" element={<ContatoAdmin />} />
+                  <Route path="entrevistas" element={<EntrevistasAdmin />} />
                 </Route>
 
                 <Route path="*" element={<NotFound />} />
