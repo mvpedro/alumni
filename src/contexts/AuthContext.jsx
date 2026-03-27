@@ -33,25 +33,30 @@ export function AuthProvider({ children }) {
   }, [])
 
   async function fetchProfile(userId) {
-    const { data: profileData } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single()
+    try {
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle()
 
-    let alumniData = null
-    if (profileData) {
-      const { data } = await supabase
-        .from('alumni')
-        .select('*, company:companies(id, name, logo_url)')
-        .eq('profile_id', userId)
-        .single()
-      alumniData = data
+      const { data: alumniData } = profileData
+        ? await supabase
+            .from('alumni')
+            .select('*, company:companies(id, name, logo_url)')
+            .eq('profile_id', userId)
+            .maybeSingle()
+        : { data: null }
+
+      setProfile(profileData)
+      setAlumni(alumniData)
+    } catch (err) {
+      console.error('Failed to fetch profile:', err)
+      setProfile(null)
+      setAlumni(null)
+    } finally {
+      setLoading(false)
     }
-
-    setProfile(profileData)
-    setAlumni(alumniData)
-    setLoading(false)
   }
 
   async function signUp({ email, password, fullName, entryClass }) {
@@ -74,9 +79,10 @@ export function AuthProvider({ children }) {
   }
 
   async function signOut() {
-    await supabase.auth.signOut()
     setProfile(null)
+    setAlumni(null)
     setSession(null)
+    await supabase.auth.signOut()
   }
 
   async function refreshProfile() {
