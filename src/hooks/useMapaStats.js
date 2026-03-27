@@ -5,101 +5,51 @@ export function useMapaStats() {
   return useQuery({
     queryKey: ['mapa-stats'],
     queryFn: async () => {
-      const [profilesRes, companiesRes, sectorsRes] = await Promise.all([
-        supabase
-          .from('alumni')
-          .select('id, entry_class, state, company_id, company:companies(id, sector_id)'),
-        supabase
-          .from('companies')
-          .select('id, name, logo_url, sector_id, sector:sectors(id, name)')
-          .eq('status', 'approved'),
-        supabase
-          .from('sectors')
-          .select('id, name')
-          .order('display_order'),
-      ])
+      const [statsRes, companiesRes, sectorsRes, classesRes, statesRes] =
+        await Promise.all([
+          supabase.from('mapa_stats').select('*').single(),
+          supabase.from('company_alumni_counts').select('*'),
+          supabase.from('sector_alumni_counts').select('*'),
+          supabase.from('class_alumni_counts').select('*'),
+          supabase.from('state_alumni_counts').select('*'),
+        ])
 
-      if (profilesRes.error) throw profilesRes.error
-      if (sectorsRes.error) throw sectorsRes.error
+      if (statsRes.error) throw statsRes.error
 
-      const profiles = profilesRes.data ?? []
+      const stats = statsRes.data
       const companies = companiesRes.data ?? []
-      const sectors = sectorsRes.data ?? []
+      const alumniPerSector = (sectorsRes.data ?? []).map((s) => ({
+        name: s.sector_name,
+        count: s.alumni_count,
+      }))
+      const alumniPerClass = (classesRes.data ?? []).map((c) => ({
+        name: c.entry_class,
+        count: c.alumni_count,
+      }))
+      const alumniPerState = (statesRes.data ?? []).map((s) => ({
+        name: s.state,
+        count: s.alumni_count,
+      }))
 
-      // Total counts
-      const totalAlumni = profiles.length
-      const totalCompanies = companies.length
-      const totalSectors = sectors.length
-
-      // Unique entry classes
-      const classes = new Set(profiles.map((p) => p.entry_class).filter(Boolean))
-      const totalClasses = classes.size
-
-      // Alumni per sector
-      const sectorCountMap = {}
-      profiles.forEach((p) => {
-        const sectorId = p.company?.sector_id
-        if (sectorId) {
-          sectorCountMap[sectorId] = (sectorCountMap[sectorId] ?? 0) + 1
-        }
-      })
-      const alumniPerSector = sectors
-        .map((s) => ({ name: s.name, count: sectorCountMap[s.id] ?? 0 }))
-        .filter((s) => s.count > 0)
-
-      // Alumni per class (chronological)
-      const classCountMap = {}
-      profiles.forEach((p) => {
-        if (p.entry_class) {
-          classCountMap[p.entry_class] = (classCountMap[p.entry_class] ?? 0) + 1
-        }
-      })
-      const alumniPerClass = Object.entries(classCountMap)
-        .map(([name, count]) => ({ name, count }))
-        .sort((a, b) => String(a.name).localeCompare(String(b.name)))
-
-      // Alumni per state (top 10)
-      const stateCountMap = {}
-      profiles.forEach((p) => {
-        if (p.state) {
-          stateCountMap[p.state] = (stateCountMap[p.state] ?? 0) + 1
-        }
-      })
-      const alumniPerState = Object.entries(stateCountMap)
-        .map(([name, count]) => ({ name, count }))
-        .sort((a, b) => b.count - a.count)
-        .slice(0, 10)
-
-      // Compute alumni count per company from profiles data
-      const alumniPerCompany = {}
-      profiles.forEach((p) => {
-        if (p.company_id) {
-          alumniPerCompany[p.company_id] = (alumniPerCompany[p.company_id] ?? 0) + 1
-        }
-      })
-
-      // Logo cluster — group companies by sector, sorted by alumni count
-      const UNCATEGORIZED = '__uncategorized__'
-      const sectorMap = {}
-      sectors.forEach((s) => {
-        sectorMap[s.id] = { id: s.id, name: s.name, companies: [] }
-      })
-      sectorMap[UNCATEGORIZED] = { id: UNCATEGORIZED, name: 'Não classificado', companies: [] }
-
+      // Build logo cluster grouped by sector
+      const sectorGroups = {}
       companies.forEach((c) => {
-        const bucket = c.sector_id && sectorMap[c.sector_id] ? c.sector_id : UNCATEGORIZED
-        sectorMap[bucket].companies.push({
-          id: c.id,
-          name: c.name,
+        const sectorName = c.sector_name || 'Não classificado'
+        if (!sectorGroups[sectorName]) {
+          sectorGroups[sectorName] = { sector: sectorName, companies: [] }
+        }
+        sectorGroups[sectorName].companies.push({
+          id: c.company_id,
+          name: c.company_name,
           logo_url: c.logo_url,
-          alumni_count: alumniPerCompany[c.id] ?? 0,
+          alumni_count: c.alumni_count,
         })
       })
-      const logoCluster = Object.values(sectorMap)
-        .filter((s) => s.companies.length > 0)
-        .map((s) => ({
-          ...s,
-          companies: s.companies.sort((a, b) => b.alumni_count - a.alumni_count),
+
+      const logoCluster = Object.values(sectorGroups)
+        .map((g) => ({
+          ...g,
+          companies: g.companies.sort((a, b) => b.alumni_count - a.alumni_count),
         }))
         .sort((a, b) => {
           const aTotal = a.companies.reduce((sum, c) => sum + c.alumni_count, 0)
@@ -108,10 +58,10 @@ export function useMapaStats() {
         })
 
       return {
-        totalAlumni,
-        totalCompanies,
-        totalSectors,
-        totalClasses,
+        totalAlumni: stats.total_alumni,
+        totalCompanies: stats.total_companies,
+        totalSectors: stats.total_sectors,
+        totalClasses: stats.total_classes,
         alumniPerSector,
         alumniPerClass,
         alumniPerState,
