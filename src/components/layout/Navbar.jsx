@@ -10,6 +10,7 @@ const publicLinks = [
   { to: '/banco-de-dados', label: 'Banco de Dados' },
   { to: '/mapa-dos-egressos', label: 'Mapa dos Egressos' },
   { to: '/entrevistas', label: 'Entrevistas' },
+  { to: '/trabalho-alumni', label: 'Trabalho Alumni' },
   { to: '/contato', label: 'Contato' },
 ]
 

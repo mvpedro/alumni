@@ -25,6 +25,8 @@ import Empresas from '@/pages/admin/Empresas'
 import Setores from '@/pages/admin/Setores'
 import ContatoAdmin from '@/pages/admin/ContatoAdmin'
 import EntrevistasAdmin from '@/pages/admin/EntrevistasAdmin'
+import TrabalhoAlumni from '@/pages/TrabalhoAlumni'
+import TrabalhoAlumniAdmin from '@/pages/admin/TrabalhoAlumniAdmin'
 
 function NotFound() {
   return (
@@ -53,6 +55,7 @@ export default function App() {
                 <Route path="/mapa-dos-egressos" element={<MapaDosEgressos />} />
                 <Route path="/entrevistas" element={<Entrevistas />} />
                 <Route path="/entrevistas/:slug" element={<EntrevistaPost />} />
+                <Route path="/trabalho-alumni" element={<TrabalhoAlumni />} />
 
                 <Route path="/perfil" element={
                   <ProtectedRoute><Perfil /></ProtectedRoute>
@@ -71,6 +74,7 @@ export default function App() {
                   <Route path="setores" element={<Setores />} />
                   <Route path="contato" element={<ContatoAdmin />} />
                   <Route path="entrevistas" element={<EntrevistasAdmin />} />
+                  <Route path="trabalho-alumni" element={<TrabalhoAlumniAdmin />} />
                 </Route>
 
                 <Route path="*" element={<NotFound />} />

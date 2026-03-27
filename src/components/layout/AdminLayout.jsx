@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, Building2, Layers, Mail, FileText } from 'lucide-react'
+import { LayoutDashboard, Users, Building2, Layers, Mail, FileText, Video } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -9,6 +9,7 @@ const navItems = [
   { to: '/admin/setores', label: 'Setores', icon: Layers },
   { to: '/admin/contato', label: 'Mensagens', icon: Mail },
   { to: '/admin/entrevistas', label: 'Entrevistas', icon: FileText },
+  { to: '/admin/trabalho-alumni', label: 'Trabalho Alumni', icon: Video },
 ]
 
 export function AdminLayout() {
