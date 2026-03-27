@@ -1,6 +1,14 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClientProvider } from '@tanstack/react-query'
+import { Toaster } from '@/components/ui/sonner'
 import { queryClient } from '@/lib/queryClient'
+import { AuthProvider } from '@/contexts/AuthContext'
+import { MainLayout } from '@/components/layout/MainLayout'
+import { ProtectedRoute } from '@/components/layout/ProtectedRoute'
+import { ApprovedRoute } from '@/components/layout/ApprovedRoute'
+import { AdminRoute } from '@/components/layout/AdminRoute'
+import Login from '@/pages/Login'
+import Cadastro from '@/pages/Cadastro'
 
 function Placeholder({ name }) {
   return <div className="p-8 text-center text-lg">{name}</div>
@@ -9,24 +17,51 @@ function Placeholder({ name }) {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Placeholder name="Landing" />} />
-          <Route path="/login" element={<Placeholder name="Login" />} />
-          <Route path="/cadastro" element={<Placeholder name="Cadastro" />} />
-          <Route path="/contato" element={<Placeholder name="Contato" />} />
-          <Route path="/banco-de-dados" element={<Placeholder name="Banco de Dados" />} />
-          <Route path="/mapa-dos-egressos" element={<Placeholder name="Mapa dos Egressos" />} />
-          <Route path="/perfil" element={<Placeholder name="Perfil" />} />
-          <Route path="/perfil/:id" element={<Placeholder name="Perfil View" />} />
-          <Route path="/admin" element={<Placeholder name="Admin Dashboard" />} />
-          <Route path="/admin/usuarios" element={<Placeholder name="Admin Usuarios" />} />
-          <Route path="/admin/empresas" element={<Placeholder name="Admin Empresas" />} />
-          <Route path="/admin/setores" element={<Placeholder name="Admin Setores" />} />
-          <Route path="/admin/contato" element={<Placeholder name="Admin Contato" />} />
-          <Route path="*" element={<Placeholder name="404 — Página não encontrada" />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Auth pages — no navbar/footer */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/cadastro" element={<Cadastro />} />
+
+            {/* Main layout — navbar + footer */}
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<Placeholder name="Landing" />} />
+              <Route path="/contato" element={<Placeholder name="Contato" />} />
+              <Route path="/mapa-dos-egressos" element={<Placeholder name="Mapa dos Egressos" />} />
+
+              <Route path="/perfil" element={
+                <ProtectedRoute><Placeholder name="Perfil" /></ProtectedRoute>
+              } />
+              <Route path="/banco-de-dados" element={
+                <ApprovedRoute><Placeholder name="Banco de Dados" /></ApprovedRoute>
+              } />
+              <Route path="/perfil/:id" element={
+                <ApprovedRoute><Placeholder name="Perfil View" /></ApprovedRoute>
+              } />
+
+              <Route path="/admin" element={
+                <AdminRoute><Placeholder name="Admin Dashboard" /></AdminRoute>
+              } />
+              <Route path="/admin/usuarios" element={
+                <AdminRoute><Placeholder name="Admin Usuarios" /></AdminRoute>
+              } />
+              <Route path="/admin/empresas" element={
+                <AdminRoute><Placeholder name="Admin Empresas" /></AdminRoute>
+              } />
+              <Route path="/admin/setores" element={
+                <AdminRoute><Placeholder name="Admin Setores" /></AdminRoute>
+              } />
+              <Route path="/admin/contato" element={
+                <AdminRoute><Placeholder name="Admin Contato" /></AdminRoute>
+              } />
+
+              <Route path="*" element={<Placeholder name="404 — Página não encontrada" />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+        <Toaster />
+      </AuthProvider>
     </QueryClientProvider>
   )
 }
