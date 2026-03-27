@@ -76,34 +76,54 @@ export default function Landing() {
 
   return (
     <div className="flex flex-col">
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-primary/80 py-24 text-center sm:py-28">
-        <div className="container mx-auto px-4">
-          <img src="/alumni-logo.png" alt="" className="mx-auto mb-6 h-24 w-auto" />
+      {/* Hero with UFSC background */}
+      <section className="relative overflow-hidden py-28 text-center sm:py-36">
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <img
+            src="/ufsc-outside.jpg"
+            alt=""
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-slate-900/75" />
+        </div>
+
+        {/* Content */}
+        <div className="relative container mx-auto px-4">
+          <img src="/alumni-logo.png" alt="" className="mx-auto mb-8 h-28 w-auto drop-shadow-lg" />
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
             Alumni Automação UFSC
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-300">
-            A rede de egressos do curso de Engenharia de Controle e Automação da UFSC. Conecte-se, explore trajetórias e inspire-se.
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-200">
+            A rede de egressos do curso de Engenharia de Controle e Automação da UFSC.
+            Conecte-se, explore trajetórias e inspire-se.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <div className="mt-10 flex flex-wrap justify-center gap-4">
             {isAuthenticated ? (
               <>
-                <Button asChild size="lg" className="bg-white text-slate-900 hover:bg-slate-100">
-                  <Link to="/banco-de-dados">Ver Banco de Dados</Link>
-                </Button>
-                <Button asChild size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10">
-                  <Link to="/perfil">Meu Perfil</Link>
-                </Button>
+                <Link to="/banco-de-dados">
+                  <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100">
+                    Ver Banco de Dados
+                  </Button>
+                </Link>
+                <Link to="/perfil">
+                  <Button size="lg" className="border-2 border-white bg-transparent text-white hover:bg-white/20">
+                    Meu Perfil
+                  </Button>
+                </Link>
               </>
             ) : (
               <>
-                <Button asChild size="lg" className="bg-white text-slate-900 hover:bg-slate-100">
-                  <Link to="/cadastro">Cadastre-se</Link>
-                </Button>
-                <Button asChild size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10">
-                  <Link to="/mapa-dos-egressos">Ver Mapa</Link>
-                </Button>
+                <Link to="/cadastro">
+                  <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100">
+                    Cadastre-se
+                  </Button>
+                </Link>
+                <Link to="/mapa-dos-egressos">
+                  <Button size="lg" className="border-2 border-white bg-transparent text-white hover:bg-white/20">
+                    Ver Mapa
+                  </Button>
+                </Link>
               </>
             )}
           </div>
@@ -111,25 +131,63 @@ export default function Landing() {
       </section>
 
       {/* Stats */}
-      <section className="border-y bg-muted/50 py-12">
+      <section className="border-y bg-muted/50 py-14">
         <div className="container mx-auto px-4">
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="grid gap-8 sm:grid-cols-3">
             {stats.map((stat) => (
               <div key={stat.key} className="text-center">
                 {isLoading ? (
-                  <Skeleton className="mx-auto mb-1 h-10 w-20" />
+                  <Skeleton className="mx-auto mb-2 h-12 w-24" />
                 ) : (
-                  <p className="text-4xl font-bold text-foreground">{statsData?.[stat.key] ?? 0}</p>
+                  <p className="text-5xl font-bold tracking-tight text-primary">
+                    {statsData?.[stat.key] ?? 0}
+                  </p>
                 )}
-                <p className="mt-1 text-sm text-muted-foreground">{stat.label}</p>
+                <p className="mt-2 text-sm font-medium text-muted-foreground">{stat.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Feature cards */}
+      {/* About section with inside photo */}
       <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight">Sobre o Alumni</h2>
+              <p className="mt-4 text-muted-foreground leading-relaxed">
+                O Alumni Automação UFSC conecta egressos do curso de Engenharia de Controle
+                e Automação da Universidade Federal de Santa Catarina. Nossa missão é fortalecer
+                a rede de contatos entre ex-alunos, facilitar oportunidades de mentoria e
+                celebrar as trajetórias profissionais dos nossos egressos.
+              </p>
+              <p className="mt-3 text-muted-foreground leading-relaxed">
+                Com mais de mil egressos cadastrados em centenas de empresas ao redor do mundo,
+                somos uma das maiores redes de alumni de engenharia do Brasil.
+              </p>
+              <div className="mt-6">
+                <Link to="/mapa-dos-egressos">
+                  <Button variant="outline">
+                    Conhecer o Mapa dos Egressos
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <div className="overflow-hidden rounded-2xl shadow-lg">
+              <img
+                src="/ufsc-inside.jpg"
+                alt="Interior da UFSC"
+                className="h-full w-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Feature cards */}
+      <section className="border-t bg-muted/30 py-20">
         <div className="container mx-auto px-4">
           <h2 className="mb-10 text-center text-2xl font-bold tracking-tight">Explore a rede</h2>
           <div className="grid gap-6 sm:grid-cols-3">
@@ -156,7 +214,7 @@ export default function Landing() {
 
       {/* Recent Interviews */}
       {recentPosts.length > 0 && (
-        <section className="border-t bg-muted/30 py-20">
+        <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="mb-10 flex items-center justify-between">
               <div>
