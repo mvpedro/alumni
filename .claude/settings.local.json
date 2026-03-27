@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sL https://alumniautomacao.ufsc.br/assets/index-d76eb91d.css)",
+      "Bash(grep -oP '\\(--mantine-primary-color[^;]*;|--mantine-color-brand[^;]*;|alumni[^;]{0,80};\\)')",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(gh project:*)",
+      "Bash(gh label:*)",
+      "Bash(gh api:*)",
+      "Bash(gh issue:*)",
+      "Bash(npm create:*)",
+      "Bash(printf 'y\\\\n')",
+      "Bash(npx create-vite@latest . --template react)",
+      "Bash(yes)",
+      "Bash(npm --version)",
+      "Bash(npx:*)",
+      "Bash(npm install:*)",
+      "Bash(npm audit:*)"
+    ]
+  }
+}
