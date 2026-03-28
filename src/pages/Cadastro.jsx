@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 
 export default function Cadastro() {
-  const [form, setForm] = useState({ fullName: '', email: '', password: '', entryClass: '' })
+  const [form, setForm] = useState({ fullName: '', email: '', password: '', entryClass: '', userType: 'alumni', expectedGraduation: '' })
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -26,6 +27,8 @@ export default function Cadastro() {
       password: form.password,
       fullName: form.fullName,
       entryClass: form.entryClass,
+      userType: form.userType,
+      expectedGraduation: form.userType === 'graduando' ? form.expectedGraduation : undefined,
     })
     if (error) {
       setError(error.message)
@@ -85,6 +88,37 @@ export default function Cadastro() {
               <Label htmlFor="entryClass">Turma de entrada (ex: 2017.2)</Label>
               <Input id="entryClass" value={form.entryClass} onChange={updateField('entryClass')} placeholder="2017.2" pattern="\d{4}\.[12]" title="Formato: YYYY.1 ou YYYY.2" required />
             </div>
+            <div className="space-y-2">
+              <Label>Você é:</Label>
+              <RadioGroup
+                value={form.userType}
+                onValueChange={(v) => setForm((prev) => ({ ...prev, userType: v }))}
+                className="flex gap-4"
+              >
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="alumni" id="type-alumni" />
+                  <Label htmlFor="type-alumni" className="cursor-pointer font-normal">Egresso (já formado)</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="graduando" id="type-graduando" />
+                  <Label htmlFor="type-graduando" className="cursor-pointer font-normal">Graduando (cursando)</Label>
+                </div>
+              </RadioGroup>
+            </div>
+            {form.userType === 'graduando' && (
+              <div className="space-y-2">
+                <Label htmlFor="expectedGraduation">Previsão de formatura (ex: 2026.2)</Label>
+                <Input
+                  id="expectedGraduation"
+                  value={form.expectedGraduation}
+                  onChange={updateField('expectedGraduation')}
+                  placeholder="2026.2"
+                  pattern="\d{4}\.[12]"
+                  title="Formato: YYYY.1 ou YYYY.2"
+                  required
+                />
+              </div>
+            )}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Criando conta...' : 'Criar conta'}
             </Button>

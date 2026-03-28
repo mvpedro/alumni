@@ -71,12 +71,17 @@ export function AuthProvider({ children }) {
     }
   }
 
-  async function signUp({ email, password, fullName, entryClass }) {
+  async function signUp({ email, password, fullName, entryClass, userType = 'alumni', expectedGraduation }) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { full_name: fullName, entry_class: entryClass },
+        data: {
+          full_name: fullName,
+          entry_class: entryClass,
+          user_type: userType,
+          ...(expectedGraduation ? { expected_graduation: expectedGraduation } : {}),
+        },
       },
     })
     return { data, error }
@@ -111,6 +116,8 @@ export function AuthProvider({ children }) {
     isAuthenticated: !!session,
     isApproved: profile?.status === 'approved',
     isAdmin: profile?.is_admin === true,
+    userType: profile?.user_type ?? 'alumni',
+    isGraduando: profile?.user_type === 'graduando',
     signUp,
     signIn,
     signOut,
