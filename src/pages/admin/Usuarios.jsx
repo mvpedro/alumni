@@ -39,7 +39,7 @@ function useUsers() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, full_name, entry_class, status, is_admin, created_at, alumni:alumni!alumni_profile_id_fkey(contact_email)')
+        .select('id, full_name, entry_class, status, is_admin, user_type, created_at, alumni:alumni!alumni_profile_id_fkey(id, contact_email, is_graduando)')
         .order('created_at', { ascending: false })
       if (error) throw error
       return data
@@ -92,6 +92,7 @@ export default function Usuarios() {
               <TableHead>Nome</TableHead>
               <TableHead className="hidden sm:table-cell">Turma</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead className="hidden md:table-cell">Tipo</TableHead>
               <TableHead className="hidden md:table-cell">Admin</TableHead>
               <TableHead className="text-right">Ações</TableHead>
             </TableRow>
@@ -103,6 +104,7 @@ export default function Usuarios() {
                   <TableCell><div className="space-y-1"><Skeleton className="h-4 w-28" /><Skeleton className="h-3 w-36" /></div></TableCell>
                   <TableCell className="hidden sm:table-cell"><Skeleton className="h-4 w-12" /></TableCell>
                   <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
+                  <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-12" /></TableCell>
                   <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-12" /></TableCell>
                   <TableCell className="text-right"><Skeleton className="ml-auto h-8 w-8" /></TableCell>
                 </TableRow>
@@ -129,6 +131,15 @@ export default function Usuarios() {
                     <Badge variant={statusVariant[user.status] ?? 'outline'}>
                       {statusLabel[user.status] ?? user.status}
                     </Badge>
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {user.user_type === 'graduando' ? (
+                      <Badge className="bg-indigo-100 text-indigo-800 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-400">
+                        Graduando
+                      </Badge>
+                    ) : (
+                      <span className="text-muted-foreground text-sm">Egresso</span>
+                    )}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
                     {user.is_admin ? (

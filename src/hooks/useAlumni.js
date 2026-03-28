@@ -31,10 +31,11 @@ export function useAlumni({
   openToAlumniTalk = false,
   openToSemanaAcademica = false,
   gender = '',
+  isGraduando = false,
   page = 1,
 } = {}) {
   return useQuery({
-    queryKey: ['alumni', { search, sector, company, city, entryClass, openToMentoring, isHiring, openToTrabalhoAlumni, openToTextInterview, openToAlumniTalk, openToSemanaAcademica, gender, page }],
+    queryKey: ['alumni', { search, sector, company, city, entryClass, openToMentoring, isHiring, openToTrabalhoAlumni, openToTextInterview, openToAlumniTalk, openToSemanaAcademica, gender, isGraduando, page }],
     queryFn: async () => {
       let query = supabase
         .from('alumni')
@@ -75,6 +76,9 @@ export function useAlumni({
       }
       if (gender) {
         query = query.eq('gender', gender)
+      }
+      if (isGraduando) {
+        query = query.eq('is_graduando', true)
       }
 
       const from = (page - 1) * PAGE_SIZE

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { CheckCircle, XCircle, MoreHorizontal, ShieldCheck, ShieldOff } from 'lucide-react'
+import { CheckCircle, XCircle, MoreHorizontal, ShieldCheck, ShieldOff, GraduationCap } from 'lucide-react'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
@@ -27,9 +27,35 @@ function useUpdateUserProfile() {
   })
 }
 
+function usePromoteToAlumni() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ profileId, alumniId }) => {
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ user_type: 'alumni' })
+        .eq('id', profileId)
+      if (profileError) throw profileError
+
+      if (alumniId) {
+        const { error: alumniError } = await supabase
+          .from('alumni')
+          .update({ is_graduando: false })
+          .eq('id', alumniId)
+        if (alumniError) throw alumniError
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'users'] })
+    },
+  })
+}
+
 export function UserActions({ user }) {
   const update = useUpdateUserProfile()
+  const promote = usePromoteToAlumni()
   const isPending = user.status === 'pending'
+  const isGraduando = user.user_type === 'graduando'
 
   async function handleAction(updates, successMsg) {
     try {
@@ -37,6 +63,15 @@ export function UserActions({ user }) {
       toast.success(successMsg)
     } catch (err) {
       toast.error(err?.message ?? 'Erro ao atualizar usuário.')
+    }
+  }
+
+  async function handlePromoteToAlumni() {
+    try {
+      await promote.mutateAsync({ profileId: user.id, alumniId: user.alumni?.id })
+      toast.success('Usuário convertido para egresso.')
+    } catch (err) {
+      toast.error(err?.message ?? 'Erro ao converter usuário.')
     }
   }
 
@@ -87,6 +122,19 @@ export function UserActions({ user }) {
             </DropdownMenuItem>
           )}
           {isPending && <DropdownMenuSeparator />}
+          {isGraduando && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={handlePromoteToAlumni}
+                disabled={promote.isPending}
+              >
+                <GraduationCap className="mr-2 h-4 w-4 text-indigo-600" />
+                Converter para egresso
+              </DropdownMenuItem>
+            </>
+          )}
+          <DropdownMenuSeparator />
           {user.is_admin ? (
             <DropdownMenuItem
               onClick={() => handleAction({ is_admin: false }, 'Admin removido.')}

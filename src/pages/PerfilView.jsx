@@ -129,6 +129,11 @@ export default function PerfilView() {
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-2xl font-bold">{profile.full_name}</h1>
+                {profile.is_graduando && (
+                  <Badge className="bg-indigo-100 text-indigo-800 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-400">
+                    Graduando
+                  </Badge>
+                )}
                 {profile.is_hiring && (
                   <Badge className="bg-green-100 text-green-800 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400">
                     Contratando
@@ -165,6 +170,12 @@ export default function PerfilView() {
                   <div className="flex items-center gap-1.5">
                     <GraduationCap className="h-4 w-4" />
                     <span>Formatura {profile.graduation_class}</span>
+                  </div>
+                )}
+                {profile.is_graduando && profile.expected_graduation && (
+                  <div className="flex items-center gap-1.5">
+                    <GraduationCap className="h-4 w-4" />
+                    <span>Previsão de formatura {profile.expected_graduation}</span>
                   </div>
                 )}
               </div>

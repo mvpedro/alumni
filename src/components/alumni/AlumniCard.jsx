@@ -27,9 +27,16 @@ export function AlumniCard({ alumni, anonymous = false }) {
             )}
           </Avatar>
           <div className="min-w-0 flex-1">
-            <p className="truncate font-semibold">
-              {anonymous ? 'Alumni Automação' : alumni.full_name}
-            </p>
+            <div className="flex items-center gap-1.5">
+              <p className="truncate font-semibold">
+                {anonymous ? 'Alumni Automação' : alumni.full_name}
+              </p>
+              {!anonymous && alumni.is_graduando && (
+                <Badge className="shrink-0 bg-indigo-100 text-indigo-800 hover:bg-indigo-100 text-xs dark:bg-indigo-900/30 dark:text-indigo-400">
+                  Graduando
+                </Badge>
+              )}
+            </div>
             {alumni.job_title && (
               <p className="truncate text-sm text-muted-foreground">{alumni.job_title}</p>
             )}

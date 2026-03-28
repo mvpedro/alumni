@@ -62,6 +62,7 @@ export function AlumniFilters({ filters, onChange, isAdmin = false }) {
       openToAlumniTalk: false,
       openToSemanaAcademica: false,
       gender: '',
+      isGraduando: false,
       page: 1,
     })
   }
@@ -73,7 +74,7 @@ export function AlumniFilters({ filters, onChange, isAdmin = false }) {
     filters.entryClass ||
     filters.openToMentoring ||
     filters.isHiring ||
-    (isAdmin && (filters.openToTrabalhoAlumni || filters.openToTextInterview || filters.openToAlumniTalk || filters.openToSemanaAcademica || filters.gender))
+    (isAdmin && (filters.openToTrabalhoAlumni || filters.openToTextInterview || filters.openToAlumniTalk || filters.openToSemanaAcademica || filters.gender || filters.isGraduando))
 
   return (
     <aside className="space-y-5">
@@ -206,6 +207,15 @@ export function AlumniFilters({ filters, onChange, isAdmin = false }) {
                   <SelectItem value="Feminino">Feminino</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Switch
+                id="graduando-filter"
+                checked={filters.isGraduando ?? false}
+                onCheckedChange={(v) => set('isGraduando', v)}
+              />
+              <Label htmlFor="graduando-filter">Apenas graduandos</Label>
             </div>
           </div>
         </>
