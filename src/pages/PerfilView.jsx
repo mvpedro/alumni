@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/contexts/AuthContext'
 import { ArrowLeft, Building2, MapPin, GraduationCap, ExternalLink, Mail, BookOpen, Briefcase, Clapperboard } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -57,6 +58,7 @@ function useParticipations(alumniId) {
 
 export default function PerfilView() {
   const { id } = useParams()
+  const { isAdmin } = useAuth()
   const { data: profile, isLoading, isError } = usePublicProfile(id)
   const { data: participations } = useParticipations(id)
 
@@ -173,7 +175,7 @@ export default function PerfilView() {
                 )}
               </div>
 
-              {(profile.open_to_trabalho_alumni || profile.open_to_text_interview || profile.open_to_alumni_talk || profile.open_to_semana_academica) && (
+              {isAdmin && (profile.open_to_trabalho_alumni || profile.open_to_text_interview || profile.open_to_alumni_talk || profile.open_to_semana_academica) && (
                 <div className="mt-3">
                   <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Disponível para</p>
                   <div className="flex flex-wrap gap-2">

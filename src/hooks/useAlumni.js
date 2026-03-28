@@ -18,9 +18,23 @@ export function useAllAlumni() {
 
 const PAGE_SIZE = 12
 
-export function useAlumni({ search = '', sector = '', company = '', city = '', entryClass = '', openToMentoring = false, isHiring = false, page = 1 } = {}) {
+export function useAlumni({
+  search = '',
+  sector = '',
+  company = '',
+  city = '',
+  entryClass = '',
+  openToMentoring = false,
+  isHiring = false,
+  openToTrabalhoAlumni = false,
+  openToTextInterview = false,
+  openToAlumniTalk = false,
+  openToSemanaAcademica = false,
+  gender = '',
+  page = 1,
+} = {}) {
   return useQuery({
-    queryKey: ['alumni', { search, sector, company, city, entryClass, openToMentoring, isHiring, page }],
+    queryKey: ['alumni', { search, sector, company, city, entryClass, openToMentoring, isHiring, openToTrabalhoAlumni, openToTextInterview, openToAlumniTalk, openToSemanaAcademica, gender, page }],
     queryFn: async () => {
       let query = supabase
         .from('alumni')
@@ -46,6 +60,21 @@ export function useAlumni({ search = '', sector = '', company = '', city = '', e
       }
       if (isHiring) {
         query = query.eq('is_hiring', true)
+      }
+      if (openToTrabalhoAlumni) {
+        query = query.eq('open_to_trabalho_alumni', true)
+      }
+      if (openToTextInterview) {
+        query = query.eq('open_to_text_interview', true)
+      }
+      if (openToAlumniTalk) {
+        query = query.eq('open_to_alumni_talk', true)
+      }
+      if (openToSemanaAcademica) {
+        query = query.eq('open_to_semana_academica', true)
+      }
+      if (gender) {
+        query = query.eq('gender', gender)
       }
 
       const from = (page - 1) * PAGE_SIZE

@@ -20,6 +20,11 @@ const defaultFilters = {
   entryClass: '',
   openToMentoring: false,
   isHiring: false,
+  openToTrabalhoAlumni: false,
+  openToTextInterview: false,
+  openToAlumniTalk: false,
+  openToSemanaAcademica: false,
+  gender: '',
   page: 1,
 }
 
@@ -30,7 +35,7 @@ export default function BancoDeDados() {
     company: searchParams.get('company') || '',
     sector: searchParams.get('sector') || '',
   })
-  const { isAuthenticated, isApproved } = useAuth()
+  const { isAuthenticated, isApproved, isAdmin } = useAuth()
   const anonymous = !isAuthenticated || !isApproved
 
   const { data, isLoading } = useAlumni(filters)
@@ -76,7 +81,7 @@ export default function BancoDeDados() {
 
       <div className="flex flex-col gap-6 lg:flex-row">
         <div className="lg:w-64 lg:shrink-0">
-          <AlumniFilters filters={filters} onChange={setFilters} />
+          <AlumniFilters filters={filters} onChange={setFilters} isAdmin={isAdmin} />
         </div>
 
         <div className="flex-1">

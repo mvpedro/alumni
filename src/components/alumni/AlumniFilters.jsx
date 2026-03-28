@@ -3,6 +3,8 @@ import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Separator } from '@/components/ui/separator'
 import { Combobox } from '@/components/common/Combobox'
 import { useSectors } from '@/hooks/useSectors'
 import { useCompanies } from '@/hooks/useCompanies'
@@ -36,7 +38,7 @@ function useEntryClasses() {
   })
 }
 
-export function AlumniFilters({ filters, onChange }) {
+export function AlumniFilters({ filters, onChange, isAdmin = false }) {
   const { data: sectors = [] } = useSectors()
   const { data: companies = [] } = useCompanies()
   const { data: cities = [] } = useCities()
@@ -47,10 +49,31 @@ export function AlumniFilters({ filters, onChange }) {
   }
 
   function clearAll() {
-    onChange({ search: filters.search, sector: '', company: '', city: '', entryClass: '', openToMentoring: false, isHiring: false, page: 1 })
+    onChange({
+      search: filters.search,
+      sector: '',
+      company: '',
+      city: '',
+      entryClass: '',
+      openToMentoring: false,
+      isHiring: false,
+      openToTrabalhoAlumni: false,
+      openToTextInterview: false,
+      openToAlumniTalk: false,
+      openToSemanaAcademica: false,
+      gender: '',
+      page: 1,
+    })
   }
 
-  const hasActiveFilters = filters.sector || filters.company || filters.city || filters.entryClass || filters.openToMentoring || filters.isHiring
+  const hasActiveFilters =
+    filters.sector ||
+    filters.company ||
+    filters.city ||
+    filters.entryClass ||
+    filters.openToMentoring ||
+    filters.isHiring ||
+    (isAdmin && (filters.openToTrabalhoAlumni || filters.openToTextInterview || filters.openToAlumniTalk || filters.openToSemanaAcademica || filters.gender))
 
   return (
     <aside className="space-y-5">
@@ -128,6 +151,65 @@ export function AlumniFilters({ filters, onChange }) {
         />
         <Label htmlFor="hiring-filter">Apenas contratando</Label>
       </div>
+
+      {isAdmin && (
+        <>
+          <Separator />
+          <div className="space-y-4">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Admin</h3>
+
+            <div className="flex items-center gap-3">
+              <Switch
+                id="trabalho-alumni-filter"
+                checked={filters.openToTrabalhoAlumni}
+                onCheckedChange={(v) => set('openToTrabalhoAlumni', v)}
+              />
+              <Label htmlFor="trabalho-alumni-filter">Disponível para Trabalho Alumni</Label>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Switch
+                id="text-interview-filter"
+                checked={filters.openToTextInterview}
+                onCheckedChange={(v) => set('openToTextInterview', v)}
+              />
+              <Label htmlFor="text-interview-filter">Disponível para Entrevista em texto</Label>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Switch
+                id="alumni-talk-filter"
+                checked={filters.openToAlumniTalk}
+                onCheckedChange={(v) => set('openToAlumniTalk', v)}
+              />
+              <Label htmlFor="alumni-talk-filter">Disponível para Alumni Talk</Label>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Switch
+                id="semana-academica-filter"
+                checked={filters.openToSemanaAcademica}
+                onCheckedChange={(v) => set('openToSemanaAcademica', v)}
+              />
+              <Label htmlFor="semana-academica-filter">Disponível para Semana Acadêmica</Label>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label>Gênero</Label>
+              <Select value={filters.gender || ''} onValueChange={(v) => set('gender', v === 'all' ? '' : v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="Masculino">Masculino</SelectItem>
+                  <SelectItem value="Feminino">Feminino</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </>
+      )}
     </aside>
   )
 }
