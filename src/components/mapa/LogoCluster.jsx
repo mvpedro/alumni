@@ -68,25 +68,50 @@ function tierClass(count) {
 export function LogoCluster({ logoCluster = [], onClick }) {
   const [hovered, setHovered] = useState(null)
 
-  // Flatten all companies from all sectors, sorted by sector then count
+  // Flatten and interleave: within each sector, alternate large and small
+  // tiles so CSS grid dense packing fills gaps efficiently
   const sectorOrder = Object.keys(SECTOR_COLORS)
-  const allCompanies = logoCluster
-    .flatMap((group) =>
-      group.companies.map((c) => ({ ...c, sector: group.sector }))
-    )
+
+  // Group by sector, sorted by total alumni per sector
+  const grouped = logoCluster
+    .map((group) => ({
+      sector: group.sector,
+      companies: group.companies.map((c) => ({ ...c, sector: group.sector })),
+    }))
     .sort((a, b) => {
       const aIdx = sectorOrder.indexOf(a.sector)
       const bIdx = sectorOrder.indexOf(b.sector)
-      const sectorCmp = (aIdx === -1 ? 99 : aIdx) - (bIdx === -1 ? 99 : bIdx)
-      if (sectorCmp !== 0) return sectorCmp
-      return b.alumni_count - a.alumni_count
+      return (aIdx === -1 ? 99 : aIdx) - (bIdx === -1 ? 99 : bIdx)
     })
+
+  // Within each sector, interleave: one large, then small ones to fill gaps
+  const allCompanies = grouped.flatMap((g) => {
+    const sorted = [...g.companies].sort((a, b) => b.alumni_count - a.alumni_count)
+    const large = sorted.filter((c) => c.alumni_count >= 2)
+    const small = sorted.filter((c) => c.alumni_count < 2)
+
+    // Interleave: after each large tile, insert up to 2 small tiles
+    const result = []
+    let si = 0
+    for (const lg of large) {
+      result.push(lg)
+      // Fill with small tiles after each large one
+      for (let j = 0; j < 2 && si < small.length; j++, si++) {
+        result.push(small[si])
+      }
+    }
+    // Remaining small tiles at the end
+    while (si < small.length) {
+      result.push(small[si++])
+    }
+    return result
+  })
 
   return (
     <TooltipProvider>
       <div className="space-y-4">
         {/* Mosaic grid */}
-        <div className="grid auto-rows-[60px] grid-cols-4 gap-1 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12">
+        <div className="grid auto-flow-dense auto-rows-[60px] grid-cols-4 gap-[3px] sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12" style={{ gridAutoFlow: 'dense' }}>
           {allCompanies.map((c) => {
             const color = getColor(c.sector)
             const isHovered = hovered === c.id

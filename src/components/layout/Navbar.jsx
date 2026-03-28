@@ -66,7 +66,7 @@ export function Navbar() {
             <Button variant="ghost" size="icon"><Menu className="h-5 w-5" /></Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-64">
-            <nav className="mt-8 flex flex-col gap-4">
+            <nav className="mt-8 flex flex-col gap-4 px-4">
               <NavLinks onClick={() => setOpen(false)} />
               {isAdmin && (
                 <Link to="/admin" onClick={() => setOpen(false)}
