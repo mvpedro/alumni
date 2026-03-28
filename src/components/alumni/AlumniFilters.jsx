@@ -2,13 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Combobox } from '@/components/common/Combobox'
 import { useSectors } from '@/hooks/useSectors'
 import { useCompanies } from '@/hooks/useCompanies'
 
@@ -39,32 +33,26 @@ export function AlumniFilters({ filters, onChange }) {
 
       <div className="space-y-1.5">
         <Label>Setor</Label>
-        <Select value={filters.sector || 'all'} onValueChange={(v) => set('sector', v === 'all' ? '' : v)}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Todos os setores" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos os setores</SelectItem>
-            {sectors.map((s) => (
-              <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Combobox
+          options={sectors.map((s) => ({ value: s.id, label: s.name }))}
+          value={filters.sector}
+          onChange={(v) => set('sector', v)}
+          placeholder="Todos os setores"
+          searchPlaceholder="Buscar setor..."
+          emptyMessage="Nenhum setor encontrado."
+        />
       </div>
 
       <div className="space-y-1.5">
         <Label>Empresa</Label>
-        <Select value={filters.company || 'all'} onValueChange={(v) => set('company', v === 'all' ? '' : v)}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Todas as empresas" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas as empresas</SelectItem>
-            {companies.map((c) => (
-              <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Combobox
+          options={companies.map((c) => ({ value: c.id, label: c.name }))}
+          value={filters.company}
+          onChange={(v) => set('company', v)}
+          placeholder="Todas as empresas"
+          searchPlaceholder="Buscar empresa..."
+          emptyMessage="Nenhuma empresa encontrada."
+        />
       </div>
 
       <div className="space-y-1.5">

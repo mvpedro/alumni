@@ -75,7 +75,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://www.instagram.com/petautomacaoufsc/"
+                  href="https://www.instagram.com/alumniautomacao/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"

@@ -21,6 +21,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { TagInput } from '@/components/common/TagInput'
+import { Combobox } from '@/components/common/Combobox'
 import { useCompanies, useSuggestCompany } from '@/hooks/useCompanies'
 import { useSectors } from '@/hooks/useSectors'
 
@@ -206,22 +207,14 @@ export function ProfileForm({ profile, onSubmit, loading }) {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="company_id">Empresa</Label>
-          <Select
+          <Combobox
+            options={companies.map((c) => ({ value: c.id, label: c.name }))}
             value={form.company_id || ''}
-            onValueChange={(v) => set('company_id', v === 'none' ? null : v)}
-          >
-            <SelectTrigger id="company_id" className="w-full">
-              <SelectValue placeholder="Selecione uma empresa" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">Nenhuma</SelectItem>
-              {companies.map((c) => (
-                <SelectItem key={c.id} value={c.id}>
-                  {c.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            onChange={(v) => set('company_id', v || null)}
+            placeholder="Selecione uma empresa"
+            searchPlaceholder="Buscar empresa..."
+            emptyMessage="Nenhuma empresa encontrada."
+          />
           <button
             type="button"
             className="mt-1 text-xs text-primary hover:underline"
