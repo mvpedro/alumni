@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClientProvider } from '@tanstack/react-query'
+import * as Sentry from '@sentry/react'
 import { Toaster } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { queryClient } from '@/lib/queryClient'
@@ -11,6 +12,7 @@ import { AdminRoute } from '@/components/layout/AdminRoute'
 import { AdminLayout } from '@/components/layout/AdminLayout'
 import Login from '@/pages/Login'
 import Cadastro from '@/pages/Cadastro'
+import EsqueciSenha from '@/pages/EsqueciSenha'
 import Perfil from '@/pages/Perfil'
 import BancoDeDados from '@/pages/BancoDeDados'
 import PerfilView from '@/pages/PerfilView'
@@ -40,6 +42,7 @@ function NotFound() {
 
 export default function App() {
   return (
+    <Sentry.ErrorBoundary fallback={<div className="flex min-h-screen items-center justify-center p-8 text-center"><div><h1 className="mb-2 text-2xl font-bold">Algo deu errado</h1><p className="text-muted-foreground">Um erro inesperado ocorreu. Tente recarregar a página.</p></div></div>}>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BrowserRouter>
@@ -48,6 +51,7 @@ export default function App() {
               {/* Auth pages — no navbar/footer */}
               <Route path="/login" element={<Login />} />
               <Route path="/cadastro" element={<Cadastro />} />
+              <Route path="/esqueci-senha" element={<EsqueciSenha />} />
 
               {/* Main layout — navbar + footer */}
               <Route element={<MainLayout />}>
@@ -87,5 +91,6 @@ export default function App() {
         <Toaster />
       </AuthProvider>
     </QueryClientProvider>
+    </Sentry.ErrorBoundary>
   )
 }
