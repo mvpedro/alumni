@@ -122,7 +122,14 @@ export default function PerfilView() {
               <AvatarFallback className="text-2xl">{initials}</AvatarFallback>
             </Avatar>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold">{profile.full_name}</h1>
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-2xl font-bold">{profile.full_name}</h1>
+                {profile.is_hiring && (
+                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400">
+                    Contratando
+                  </Badge>
+                )}
+              </div>
               {profile.job_title && (
                 <p className="text-muted-foreground">{profile.job_title}</p>
               )}

@@ -18,9 +18,9 @@ export function useAllAlumni() {
 
 const PAGE_SIZE = 12
 
-export function useAlumni({ search = '', sector = '', company = '', city = '', entryClass = '', openToMentoring = false, page = 1 } = {}) {
+export function useAlumni({ search = '', sector = '', company = '', city = '', entryClass = '', openToMentoring = false, isHiring = false, page = 1 } = {}) {
   return useQuery({
-    queryKey: ['alumni', { search, sector, company, city, entryClass, openToMentoring, page }],
+    queryKey: ['alumni', { search, sector, company, city, entryClass, openToMentoring, isHiring, page }],
     queryFn: async () => {
       let query = supabase
         .from('alumni')
@@ -43,6 +43,9 @@ export function useAlumni({ search = '', sector = '', company = '', city = '', e
       }
       if (openToMentoring) {
         query = query.eq('open_to_mentoring', true)
+      }
+      if (isHiring) {
+        query = query.eq('is_hiring', true)
       }
 
       const from = (page - 1) * PAGE_SIZE

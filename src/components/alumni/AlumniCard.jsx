@@ -56,9 +56,16 @@ export function AlumniCard({ alumni, anonymous = false }) {
           )}
         </div>
 
-        {alumni.open_to_mentoring && (
-          <div className="mt-3">
-            <Badge variant="secondary" className="text-xs">Mentor disponível</Badge>
+        {(alumni.is_hiring || alumni.open_to_mentoring) && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {alumni.is_hiring && (
+              <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs dark:bg-green-900/30 dark:text-green-400">
+                Contratando
+              </Badge>
+            )}
+            {alumni.open_to_mentoring && (
+              <Badge variant="secondary" className="text-xs">Mentor disponível</Badge>
+            )}
           </div>
         )}
       </CardContent>

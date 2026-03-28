@@ -47,10 +47,10 @@ export function AlumniFilters({ filters, onChange }) {
   }
 
   function clearAll() {
-    onChange({ search: filters.search, sector: '', company: '', city: '', entryClass: '', openToMentoring: false, page: 1 })
+    onChange({ search: filters.search, sector: '', company: '', city: '', entryClass: '', openToMentoring: false, isHiring: false, page: 1 })
   }
 
-  const hasActiveFilters = filters.sector || filters.company || filters.city || filters.entryClass || filters.openToMentoring
+  const hasActiveFilters = filters.sector || filters.company || filters.city || filters.entryClass || filters.openToMentoring || filters.isHiring
 
   return (
     <aside className="space-y-5">
@@ -118,6 +118,15 @@ export function AlumniFilters({ filters, onChange }) {
           onCheckedChange={(v) => set('openToMentoring', v)}
         />
         <Label htmlFor="mentoring-filter">Apenas mentores</Label>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <Switch
+          id="hiring-filter"
+          checked={filters.isHiring}
+          onCheckedChange={(v) => set('isHiring', v)}
+        />
+        <Label htmlFor="hiring-filter">Apenas contratando</Label>
       </div>
     </aside>
   )

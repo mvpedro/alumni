@@ -19,6 +19,7 @@ const defaultFilters = {
   city: '',
   entryClass: '',
   openToMentoring: false,
+  isHiring: false,
   page: 1,
 }
 

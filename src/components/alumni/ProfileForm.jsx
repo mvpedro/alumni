@@ -152,6 +152,7 @@ export function ProfileForm({ profile, onSubmit, loading }) {
     open_to_text_interview: profile?.open_to_text_interview ?? false,
     open_to_alumni_talk: profile?.open_to_alumni_talk ?? false,
     open_to_semana_academica: profile?.open_to_semana_academica ?? false,
+    is_hiring: profile?.is_hiring ?? false,
   })
 
   function set(field, value) {
@@ -330,6 +331,14 @@ export function ProfileForm({ profile, onSubmit, loading }) {
             onCheckedChange={(v) => set('open_to_contact', v)}
           />
           <Label htmlFor="open_to_contact">Disponível para contato</Label>
+        </div>
+        <div className="flex items-center gap-3">
+          <Switch
+            id="is_hiring"
+            checked={form.is_hiring}
+            onCheckedChange={(v) => set('is_hiring', v)}
+          />
+          <Label htmlFor="is_hiring">Estou contratando para minha equipe</Label>
         </div>
       </div>
 
