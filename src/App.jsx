@@ -29,6 +29,7 @@ import Setores from '@/pages/admin/Setores'
 import ContatoAdmin from '@/pages/admin/ContatoAdmin'
 import EntrevistasAdmin from '@/pages/admin/EntrevistasAdmin'
 import TrabalhoAlumni from '@/pages/TrabalhoAlumni'
+import TrabalhoAlumniVideo from '@/pages/TrabalhoAlumniVideo'
 import TrabalhoAlumniAdmin from '@/pages/admin/TrabalhoAlumniAdmin'
 
 function NotFound() {
@@ -62,6 +63,7 @@ export default function App() {
                 <Route path="/entrevistas" element={<Entrevistas />} />
                 <Route path="/entrevistas/:slug" element={<EntrevistaPost />} />
                 <Route path="/trabalho-alumni" element={<TrabalhoAlumni />} />
+                <Route path="/trabalho-alumni/:id" element={<TrabalhoAlumniVideo />} />
 
                 <Route path="/perfil" element={
                   <ProtectedRoute><Perfil /></ProtectedRoute>

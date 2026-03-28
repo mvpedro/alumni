@@ -20,6 +20,22 @@ export function useTrabalhoAlumni({ published } = {}) {
   })
 }
 
+export function useTrabalhoAlumniById(id) {
+  return useQuery({
+    queryKey: ['trabalho-alumni', id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('trabalho_alumni')
+        .select('*, alumni:alumni(id, full_name, avatar_url, open_to_trabalho_alumni)')
+        .eq('id', id)
+        .single()
+      if (error) throw error
+      return data
+    },
+    enabled: !!id,
+  })
+}
+
 export function useCreateVideo() {
   const qc = useQueryClient()
   return useMutation({

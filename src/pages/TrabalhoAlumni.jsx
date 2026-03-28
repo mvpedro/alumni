@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom'
 import { useTrabalhoAlumni } from '@/hooks/useTrabalhoAlumni'
-import { useAuth } from '@/contexts/AuthContext'
-import { YouTubeEmbed } from '@/components/common/YouTubeEmbed'
-import { Card, CardContent } from '@/components/ui/card'
 import { EmptyState } from '@/components/common/EmptyState'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Badge } from '@/components/ui/badge'
 import { Video } from 'lucide-react'
+
+function getYouTubeId(url) {
+  const match = url?.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/)
+  return match?.[1] ?? null
+}
 
 // Group videos by semester, preserving descending order
 function groupBySemester(videos) {
@@ -20,7 +23,6 @@ function groupBySemester(videos) {
 
 export default function TrabalhoAlumni() {
   const { data: videos = [], isLoading } = useTrabalhoAlumni({ published: true })
-  const { isAuthenticated, isApproved } = useAuth()
 
   const grouped = groupBySemester(videos)
 
@@ -43,12 +45,12 @@ export default function TrabalhoAlumni() {
           {Array.from({ length: 2 }).map((_, s) => (
             <div key={s}>
               <Skeleton className="mb-4 h-6 w-36" />
-              <div className="grid gap-8 lg:grid-cols-2">
-                {Array.from({ length: 4 }).map((_, i) => (
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 3 }).map((_, i) => (
                   <div key={i} className="overflow-hidden rounded-xl border">
                     <Skeleton className="aspect-video w-full rounded-none" />
-                    <div className="space-y-2 p-4">
-                      <Skeleton className="h-5 w-3/4" />
+                    <div className="space-y-2 p-3">
+                      <Skeleton className="h-4 w-3/4" />
                       <Skeleton className="h-3 w-1/3" />
                     </div>
                   </div>
@@ -70,28 +72,59 @@ export default function TrabalhoAlumni() {
               <h2 className="mb-5 text-xl font-semibold">
                 {semester === 'Sem semestre' ? semester : `Semestre ${semester}`}
               </h2>
-              <div className="grid gap-8 lg:grid-cols-2">
-                {semVideos.map((video) => (
-                  <Card key={video.id} className="overflow-hidden transition-shadow hover:shadow-md">
-                    <YouTubeEmbed url={video.youtube_url} title={video.title} />
-                    <CardContent className="pt-4">
-                      {video.title && (
-                        <h3 className="mb-1 font-semibold leading-snug">{video.title}</h3>
-                      )}
-                      {video.description && (
-                        <p className="mb-2 text-sm text-muted-foreground">{video.description}</p>
-                      )}
-                      {video.alumni && isAuthenticated && isApproved && (
-                        <Link
-                          to={`/perfil/${video.alumni.id}`}
-                          className="text-sm font-medium text-primary hover:underline"
-                        >
-                          Ver perfil de {video.alumni.full_name}
-                        </Link>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {semVideos.map((video) => {
+                  const videoId = getYouTubeId(video.youtube_url)
+                  return (
+                    <Link
+                      key={video.id}
+                      to={`/trabalho-alumni/${video.id}`}
+                      className="group overflow-hidden rounded-xl border bg-card transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <div className="relative aspect-video overflow-hidden bg-muted">
+                        {videoId ? (
+                          <img
+                            src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+                            alt={video.title ?? 'Vídeo'}
+                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center">
+                            <Video className="h-8 w-8 text-muted-foreground" />
+                          </div>
+                        )}
+                        {/* Play overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
+                          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-white">
+                            <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 translate-x-0.5">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-3">
+                        {video.title && (
+                          <p className="mb-1 line-clamp-2 text-sm font-semibold leading-snug">
+                            {video.title}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-2">
+                          {video.alumni?.full_name && (
+                            <span className="truncate text-xs text-muted-foreground">
+                              {video.alumni.full_name}
+                            </span>
+                          )}
+                          {video.semester && (
+                            <Badge variant="secondary" className="ml-auto shrink-0 text-xs">
+                              {video.semester}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </Link>
+                  )
+                })}
               </div>
             </section>
           ))}
