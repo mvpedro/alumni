@@ -124,7 +124,7 @@ export default function MapaDosEgressos() {
       {/* Logo cluster — hero section, public */}
       <div className="mb-10">
         <h2 className="mb-4 text-xl font-semibold">
-          {selectedSector ? `Empresas — ${selectedSector}` : 'Empresas dos Egressos'}
+          {selectedSector ? `Onde estão os egressos — ${selectedSector}` : 'Onde estão os egressos'}
         </h2>
         {isLoading ? (
           <div className="flex flex-wrap gap-4">

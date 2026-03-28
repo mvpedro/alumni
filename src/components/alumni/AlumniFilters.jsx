@@ -1,14 +1,46 @@
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Combobox } from '@/components/common/Combobox'
 import { useSectors } from '@/hooks/useSectors'
 import { useCompanies } from '@/hooks/useCompanies'
 
+function useCities() {
+  return useQuery({
+    queryKey: ['filter-cities'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('alumni')
+        .select('city')
+        .not('city', 'is', null)
+        .not('city', 'eq', '')
+      const unique = [...new Set((data ?? []).map((d) => d.city).filter(Boolean))].sort()
+      return unique
+    },
+  })
+}
+
+function useEntryClasses() {
+  return useQuery({
+    queryKey: ['filter-classes'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('alumni')
+        .select('entry_class')
+        .not('entry_class', 'is', null)
+      const unique = [...new Set((data ?? []).map((d) => d.entry_class).filter(Boolean))].sort()
+      return unique
+    },
+  })
+}
+
 export function AlumniFilters({ filters, onChange }) {
   const { data: sectors = [] } = useSectors()
   const { data: companies = [] } = useCompanies()
+  const { data: cities = [] } = useCities()
+  const { data: classes = [] } = useEntryClasses()
 
   function set(field, value) {
     onChange({ ...filters, [field]: value, page: 1 })
@@ -56,22 +88,26 @@ export function AlumniFilters({ filters, onChange }) {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="city-filter">Cidade</Label>
-        <Input
-          id="city-filter"
-          placeholder="ex: Florianópolis"
+        <Label>Cidade</Label>
+        <Combobox
+          options={cities.map((c) => ({ value: c, label: c }))}
           value={filters.city}
-          onChange={(e) => set('city', e.target.value)}
+          onChange={(v) => set('city', v)}
+          placeholder="Todas as cidades"
+          searchPlaceholder="Buscar cidade..."
+          emptyMessage="Nenhuma cidade encontrada."
         />
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="class-filter">Turma de entrada</Label>
-        <Input
-          id="class-filter"
-          placeholder="ex: 2018"
+        <Label>Turma de entrada</Label>
+        <Combobox
+          options={classes.map((c) => ({ value: c, label: c }))}
           value={filters.entryClass}
-          onChange={(e) => set('entryClass', e.target.value)}
+          onChange={(v) => set('entryClass', v)}
+          placeholder="Todas as turmas"
+          searchPlaceholder="Buscar turma..."
+          emptyMessage="Nenhuma turma encontrada."
         />
       </div>
 

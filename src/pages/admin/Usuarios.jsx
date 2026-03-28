@@ -39,7 +39,7 @@ function useUsers() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, full_name, email, entry_class, status, is_admin, created_at')
+        .select('id, full_name, entry_class, status, is_admin, created_at, alumni:alumni!alumni_profile_id_fkey(contact_email)')
         .order('created_at', { ascending: false })
       if (error) throw error
       return data
@@ -56,7 +56,7 @@ export default function Usuarios() {
     const matchesSearch =
       search === '' ||
       u.full_name?.toLowerCase().includes(search.toLowerCase()) ||
-      u.email?.toLowerCase().includes(search.toLowerCase())
+      u.alumni?.contact_email?.toLowerCase().includes(search.toLowerCase())
     const matchesStatus = statusFilter === 'all' || u.status === statusFilter
     return matchesSearch && matchesStatus
   })
@@ -118,7 +118,9 @@ export default function Usuarios() {
                 <TableRow key={user.id}>
                   <TableCell>
                     <div className="font-medium">{user.full_name || '—'}</div>
-                    <div className="text-xs text-muted-foreground">{user.email}</div>
+                    {user.alumni?.contact_email && (
+                      <div className="text-xs text-muted-foreground">{user.alumni.contact_email}</div>
+                    )}
                   </TableCell>
                   <TableCell className="hidden sm:table-cell">
                     {user.entry_class || '—'}

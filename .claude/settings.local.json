@@ -58,7 +58,8 @@
       "Bash(node scripts/scrape-interviews.mjs)",
       "Bash(node -e \":*)",
       "Bash(grep -l \"+\" scripts/interviews/*.json)",
-      "Bash(SERVICE_KEY=\"***REDACTED_SERVICE_ROLE_KEY***\" node -e \":*)"
+      "Bash(SERVICE_KEY=\"***REDACTED_SERVICE_ROLE_KEY***\" node -e \":*)",
+      "Bash(grep -li \"lorem\\\\|Lorem\\\\|ipsum\\\\|Ipsum\" scripts/interviews/*.json)"
     ]
   }
 }
