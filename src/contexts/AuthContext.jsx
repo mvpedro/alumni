@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import posthog from 'posthog-js'
 import { supabase } from '@/lib/supabase'
 
 const AuthContext = createContext(null)
@@ -50,6 +51,17 @@ export function AuthProvider({ children }) {
 
       setProfile(profileData)
       setAlumni(alumniData)
+
+      // Identify user in PostHog
+      if (profileData) {
+        posthog.identify(userId, {
+          name: alumniData?.full_name || profileData.full_name,
+          email: alumniData?.contact_email,
+          entry_class: alumniData?.entry_class || profileData.entry_class,
+          is_admin: profileData.is_admin,
+          status: profileData.status,
+        })
+      }
     } catch (err) {
       console.error('Failed to fetch profile:', err)
       setProfile(null)
@@ -79,6 +91,7 @@ export function AuthProvider({ children }) {
   }
 
   async function signOut() {
+    posthog.reset()
     setProfile(null)
     setAlumni(null)
     setSession(null)
