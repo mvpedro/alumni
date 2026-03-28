@@ -165,6 +165,26 @@ export default function PerfilView() {
                   <Badge variant="outline">Aberto para contato</Badge>
                 )}
               </div>
+
+              {(profile.open_to_trabalho_alumni || profile.open_to_text_interview || profile.open_to_alumni_talk || profile.open_to_semana_academica) && (
+                <div className="mt-3">
+                  <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Disponível para</p>
+                  <div className="flex flex-wrap gap-2">
+                    {profile.open_to_trabalho_alumni && (
+                      <Badge variant="outline" className="border-teal-500 text-teal-600 dark:text-teal-400">Trabalho Alumni</Badge>
+                    )}
+                    {profile.open_to_text_interview && (
+                      <Badge variant="outline" className="border-teal-500 text-teal-600 dark:text-teal-400">Entrevista em texto</Badge>
+                    )}
+                    {profile.open_to_alumni_talk && (
+                      <Badge variant="outline" className="border-teal-500 text-teal-600 dark:text-teal-400">Alumni Talk</Badge>
+                    )}
+                    {profile.open_to_semana_academica && (
+                      <Badge variant="outline" className="border-teal-500 text-teal-600 dark:text-teal-400">Semana Acadêmica</Badge>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

@@ -148,6 +148,10 @@ export function ProfileForm({ profile, onSubmit, loading }) {
     open_to_contact: profile?.open_to_contact ?? false,
     show_email: profile?.show_email ?? false,
     show_linkedin: profile?.show_linkedin ?? true,
+    open_to_trabalho_alumni: profile?.open_to_trabalho_alumni ?? false,
+    open_to_text_interview: profile?.open_to_text_interview ?? false,
+    open_to_alumni_talk: profile?.open_to_alumni_talk ?? false,
+    open_to_semana_academica: profile?.open_to_semana_academica ?? false,
   })
 
   function set(field, value) {
@@ -326,6 +330,43 @@ export function ProfileForm({ profile, onSubmit, loading }) {
             onCheckedChange={(v) => set('open_to_contact', v)}
           />
           <Label htmlFor="open_to_contact">Disponível para contato</Label>
+        </div>
+      </div>
+
+      {/* --- Participação no Alumni --- */}
+      <SectionHeading>Participação no Alumni</SectionHeading>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-3">
+          <Switch
+            id="open_to_trabalho_alumni"
+            checked={form.open_to_trabalho_alumni}
+            onCheckedChange={(v) => set('open_to_trabalho_alumni', v)}
+          />
+          <Label htmlFor="open_to_trabalho_alumni">Aceito ser entrevistado por calouros no Trabalho Alumni</Label>
+        </div>
+        <div className="flex items-center gap-3">
+          <Switch
+            id="open_to_text_interview"
+            checked={form.open_to_text_interview}
+            onCheckedChange={(v) => set('open_to_text_interview', v)}
+          />
+          <Label htmlFor="open_to_text_interview">Aceito ser entrevistado para uma matéria escrita no site</Label>
+        </div>
+        <div className="flex items-center gap-3">
+          <Switch
+            id="open_to_alumni_talk"
+            checked={form.open_to_alumni_talk}
+            onCheckedChange={(v) => set('open_to_alumni_talk', v)}
+          />
+          <Label htmlFor="open_to_alumni_talk">Tenho interesse em palestrar através do Alumni Talks</Label>
+        </div>
+        <div className="flex items-center gap-3">
+          <Switch
+            id="open_to_semana_academica"
+            checked={form.open_to_semana_academica}
+            onCheckedChange={(v) => set('open_to_semana_academica', v)}
+          />
+          <Label htmlFor="open_to_semana_academica">Tenho interesse em palestrar na Semana Acadêmica</Label>
         </div>
       </div>
 
