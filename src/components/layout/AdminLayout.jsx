@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, Building2, Layers, Mail, FileText, Video, Menu } from 'lucide-react'
+import { LayoutDashboard, Users, Building2, Layers, Mail, FileText, Video, Mic, Menu } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
@@ -13,6 +13,7 @@ const navItems = [
   { to: '/admin/contato', label: 'Mensagens', icon: Mail },
   { to: '/admin/entrevistas', label: 'Entrevistas', icon: FileText },
   { to: '/admin/trabalho-alumni', label: 'Trabalho Alumni', icon: Video },
+  { to: '/admin/palestras', label: 'Palestras', icon: Mic },
 ]
 
 function NavItems({ onClick }) {

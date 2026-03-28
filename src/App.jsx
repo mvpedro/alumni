@@ -31,6 +31,8 @@ import EntrevistasAdmin from '@/pages/admin/EntrevistasAdmin'
 import TrabalhoAlumni from '@/pages/TrabalhoAlumni'
 import TrabalhoAlumniVideo from '@/pages/TrabalhoAlumniVideo'
 import TrabalhoAlumniAdmin from '@/pages/admin/TrabalhoAlumniAdmin'
+import Palestras from '@/pages/Palestras'
+import PalestrasAdmin from '@/pages/admin/PalestrasAdmin'
 
 function NotFound() {
   return (
@@ -64,6 +66,7 @@ export default function App() {
                 <Route path="/entrevistas/:slug" element={<EntrevistaPost />} />
                 <Route path="/trabalho-alumni" element={<TrabalhoAlumni />} />
                 <Route path="/trabalho-alumni/:id" element={<TrabalhoAlumniVideo />} />
+                <Route path="/palestras" element={<Palestras />} />
 
                 <Route path="/perfil" element={
                   <ProtectedRoute><Perfil /></ProtectedRoute>
@@ -83,6 +86,7 @@ export default function App() {
                   <Route path="contato" element={<ContatoAdmin />} />
                   <Route path="entrevistas" element={<EntrevistasAdmin />} />
                   <Route path="trabalho-alumni" element={<TrabalhoAlumniAdmin />} />
+                  <Route path="palestras" element={<PalestrasAdmin />} />
                 </Route>
 
                 <Route path="*" element={<NotFound />} />
