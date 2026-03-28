@@ -33,6 +33,7 @@ import TrabalhoAlumniVideo from '@/pages/TrabalhoAlumniVideo'
 import TrabalhoAlumniAdmin from '@/pages/admin/TrabalhoAlumniAdmin'
 import Palestras from '@/pages/Palestras'
 import PalestrasAdmin from '@/pages/admin/PalestrasAdmin'
+import BadgesAdmin from '@/pages/admin/BadgesAdmin'
 
 function NotFound() {
   return (
@@ -87,6 +88,7 @@ export default function App() {
                   <Route path="entrevistas" element={<EntrevistasAdmin />} />
                   <Route path="trabalho-alumni" element={<TrabalhoAlumniAdmin />} />
                   <Route path="palestras" element={<PalestrasAdmin />} />
+                  <Route path="badges" element={<BadgesAdmin />} />
                 </Route>
 
                 <Route path="*" element={<NotFound />} />

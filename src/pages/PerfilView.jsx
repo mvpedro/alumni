@@ -10,6 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { YouTubeEmbed } from '@/components/common/YouTubeEmbed'
+import { BadgeDisplay } from '@/components/alumni/BadgeDisplay'
+import { useAlumniBadges } from '@/hooks/useBadges'
 
 function usePublicProfile(id) {
   return useQuery({
@@ -61,6 +63,7 @@ export default function PerfilView() {
   const { isAdmin } = useAuth()
   const { data: profile, isLoading, isError } = usePublicProfile(id)
   const { data: participations } = useParticipations(id)
+  const { data: alumniBadges = [] } = useAlumniBadges(id)
 
   if (isLoading) {
     return (
@@ -174,6 +177,12 @@ export default function PerfilView() {
                   <Badge variant="outline">Aberto para contato</Badge>
                 )}
               </div>
+
+              {alumniBadges.length > 0 && (
+                <div className="mt-3">
+                  <BadgeDisplay badges={alumniBadges} />
+                </div>
+              )}
 
               {isAdmin && (profile.open_to_trabalho_alumni || profile.open_to_text_interview || profile.open_to_alumni_talk || profile.open_to_semana_academica) && (
                 <div className="mt-3">

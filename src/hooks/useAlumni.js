@@ -38,7 +38,7 @@ export function useAlumni({
     queryFn: async () => {
       let query = supabase
         .from('alumni')
-        .select('*, company:companies(id, name, logo_url, sector:sectors(id, name))', { count: 'exact' })
+        .select('*, company:companies(id, name, logo_url, sector:sectors(id, name)), alumni_badges(badge:badges(slug, name, color))', { count: 'exact' })
 
       if (search) {
         query = query.or(`full_name.ilike.%${search}%,job_title.ilike.%${search}%`)
