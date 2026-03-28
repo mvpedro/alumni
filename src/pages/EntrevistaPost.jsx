@@ -1,13 +1,40 @@
 import { Link, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
 import { useInterview } from '@/hooks/useInterviews'
+import { useAuth } from '@/contexts/AuthContext'
 import { PostContent } from '@/components/blog/PostContent'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ArrowLeft } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { ArrowLeft, User } from 'lucide-react'
+
+// Try to find the interviewee in the alumni database by matching name from the title
+function useAlumniMatch(title) {
+  // Extract name from "Entrevista: Name Here"
+  const name = title?.replace(/^Entrevista:\s*/i, '').trim()
+
+  return useQuery({
+    queryKey: ['alumni-match', name],
+    queryFn: async () => {
+      if (!name || name.length < 3) return null
+      // Try exact match first, then partial
+      const { data } = await supabase
+        .from('alumni')
+        .select('id, full_name')
+        .ilike('full_name', `%${name}%`)
+        .limit(1)
+      return data?.[0] ?? null
+    },
+    enabled: !!name,
+  })
+}
 
 export default function EntrevistaPost() {
   const { slug } = useParams()
   const { data: post, isLoading, isError } = useInterview(slug)
+  const { isAuthenticated, isApproved } = useAuth()
+  const { data: alumniMatch } = useAlumniMatch(post?.title)
 
   if (isLoading) {
     return (
@@ -21,8 +48,6 @@ export default function EntrevistaPost() {
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-5/6" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-2/3" />
           </div>
         </div>
       </div>
@@ -47,6 +72,8 @@ export default function EntrevistaPost() {
         year: 'numeric',
       })
     : null
+
+  const intervieweeName = post.title?.replace(/^Entrevista:\s*/i, '').trim()
 
   return (
     <>
@@ -82,7 +109,43 @@ export default function EntrevistaPost() {
           {publishedDate && (
             <p className="mb-8 text-sm text-muted-foreground">{publishedDate}</p>
           )}
+
           <PostContent content={post.content ?? ''} />
+
+          {/* CTA to alumni profile */}
+          <div className="mt-12 rounded-xl border bg-muted/30 p-6 text-center">
+            {alumniMatch && isAuthenticated && isApproved ? (
+              <>
+                <p className="mb-3 text-sm text-muted-foreground">
+                  Quer saber mais sobre {intervieweeName}?
+                </p>
+                <Link to={`/perfil/${alumniMatch.id}`}>
+                  <Button>
+                    <User className="mr-2 h-4 w-4" />
+                    Ver perfil de {alumniMatch.full_name}
+                  </Button>
+                </Link>
+              </>
+            ) : alumniMatch && !isAuthenticated ? (
+              <>
+                <p className="mb-3 text-sm text-muted-foreground">
+                  Quer saber mais sobre {intervieweeName}? Faça login para ver o perfil completo.
+                </p>
+                <Link to="/login">
+                  <Button variant="outline">Entrar para ver perfil</Button>
+                </Link>
+              </>
+            ) : (
+              <>
+                <p className="mb-3 text-sm text-muted-foreground">
+                  Gostou desta entrevista? Explore mais histórias de egressos.
+                </p>
+                <Link to="/entrevistas">
+                  <Button variant="outline">Ver mais entrevistas</Button>
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </>

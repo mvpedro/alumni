@@ -56,7 +56,9 @@
       "Bash(__NEW_LINE_1dd4bb1a25f7f1f9__ curl:*)",
       "WebFetch(domain:web.archive.org)",
       "Bash(node scripts/scrape-interviews.mjs)",
-      "Bash(node -e \":*)"
+      "Bash(node -e \":*)",
+      "Bash(grep -l \"+\" scripts/interviews/*.json)",
+      "Bash(SERVICE_KEY=\"***REDACTED_SERVICE_ROLE_KEY***\" node -e \":*)"
     ]
   }
 }
