@@ -53,7 +53,10 @@
       "Bash(python -c \"import paramiko; print\\(''paramiko available''\\)\")",
       "Bash(echo \"exit: $?\")",
       "Bash(python -c \":*)",
-      "Bash(__NEW_LINE_1dd4bb1a25f7f1f9__ curl:*)"
+      "Bash(__NEW_LINE_1dd4bb1a25f7f1f9__ curl:*)",
+      "WebFetch(domain:web.archive.org)",
+      "Bash(node scripts/scrape-interviews.mjs)",
+      "Bash(node -e \":*)"
     ]
   }
 }
