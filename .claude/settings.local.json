@@ -60,7 +60,9 @@
       "Bash(grep -l \"+\" scripts/interviews/*.json)",
       "Bash(SERVICE_KEY=\"***REDACTED_SERVICE_ROLE_KEY***\" node -e \":*)",
       "Bash(grep -li \"lorem\\\\|Lorem\\\\|ipsum\\\\|Ipsum\" scripts/interviews/*.json)",
-      "Bash(python -c \"import json,sys; orgs=json.load\\(sys.stdin\\); [print\\(o[''''slug''''], o[''''name'''']\\) for o in orgs]\")"
+      "Bash(python -c \"import json,sys; orgs=json.load\\(sys.stdin\\); [print\\(o[''''slug''''], o[''''name'''']\\) for o in orgs]\")",
+      "Bash(rm public/og-image.svg)",
+      "Bash(npm list:*)"
     ]
   }
 }

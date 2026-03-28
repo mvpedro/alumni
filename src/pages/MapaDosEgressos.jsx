@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { Users, Building2, LayoutGrid, GraduationCap } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 import { useMapaStats } from '@/hooks/useMapaStats'
 import { StatCard } from '@/components/mapa/StatCard'
 import { MapaCharts } from '@/components/mapa/MapaCharts'
@@ -25,10 +27,68 @@ const SECTOR_COLORS = {
   'Governo': '#f59e0b',
 }
 
+// When a sector is selected, fetch alumni in that sector to compute class/state breakdowns
+function useFilteredStats(selectedSector, companyData) {
+  return useQuery({
+    queryKey: ['mapa-filtered', selectedSector],
+    queryFn: async () => {
+      if (!selectedSector || !companyData) return null
+
+      // Get company IDs in this sector
+      const companyIds = companyData
+        .filter((c) => c.sector_name === selectedSector)
+        .map((c) => c.company_id)
+
+      if (companyIds.length === 0) return { alumniPerClass: [], alumniPerState: [] }
+
+      // Fetch alumni in these companies
+      const { data: alumni } = await supabase
+        .from('alumni')
+        .select('entry_class, state')
+        .in('company_id', companyIds)
+
+      if (!alumni) return { alumniPerClass: [], alumniPerState: [] }
+
+      // Aggregate by class
+      const classMap = {}
+      alumni.forEach((a) => {
+        if (a.entry_class) classMap[a.entry_class] = (classMap[a.entry_class] || 0) + 1
+      })
+      const alumniPerClass = Object.entries(classMap)
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => a.name.localeCompare(b.name))
+
+      // Aggregate by state
+      const stateMap = {}
+      alumni.forEach((a) => {
+        if (a.state) stateMap[a.state] = (stateMap[a.state] || 0) + 1
+      })
+      const alumniPerState = Object.entries(stateMap)
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 15)
+
+      return { alumniPerClass, alumniPerState }
+    },
+    enabled: !!selectedSector && !!companyData,
+  })
+}
+
 export default function MapaDosEgressos() {
   const { data: stats, isLoading } = useMapaStats()
   const navigate = useNavigate()
   const [selectedSector, setSelectedSector] = useState(null)
+
+  // Raw company data for filtering
+  const { data: rawCompanies } = useQuery({
+    queryKey: ['raw-company-counts'],
+    queryFn: async () => {
+      const { data } = await supabase.from('company_alumni_counts').select('*')
+      return data ?? []
+    },
+  })
+
+  const { data: filteredData } = useFilteredStats(selectedSector, rawCompanies)
 
   function handleLogoClick(companyId) {
     navigate(`/banco-de-dados?company=${companyId}`)
@@ -46,6 +106,14 @@ export default function MapaDosEgressos() {
   const filteredPerSector = selectedSector
     ? stats?.alumniPerSector?.filter((s) => s.name === selectedSector) ?? []
     : stats?.alumniPerSector ?? []
+
+  const filteredPerClass = selectedSector && filteredData
+    ? filteredData.alumniPerClass
+    : stats?.alumniPerClass ?? []
+
+  const filteredPerState = selectedSector && filteredData
+    ? filteredData.alumniPerState
+    : stats?.alumniPerState ?? []
 
   return (
     <div className="container mx-auto px-4 py-10">
@@ -156,8 +224,8 @@ export default function MapaDosEgressos() {
       ) : stats ? (
         <MapaCharts
           alumniPerSector={filteredPerSector}
-          alumniPerClass={stats.alumniPerClass}
-          alumniPerState={stats.alumniPerState}
+          alumniPerClass={filteredPerClass}
+          alumniPerState={filteredPerState}
         />
       ) : null}
     </div>
