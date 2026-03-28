@@ -14,6 +14,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { slugify } from '@/hooks/useInterviews'
+import { Combobox } from '@/components/common/Combobox'
+import { useAllAlumni } from '@/hooks/useAlumni'
 
 const empty = {
   title: '',
@@ -22,6 +24,7 @@ const empty = {
   content: '',
   coverFile: null,
   published: false,
+  alumni_id: '',
 }
 
 function MarkdownToolbar({ textareaRef, onContentChange }) {
@@ -82,6 +85,8 @@ export function InterviewForm({ open, onOpenChange, onSubmit, loading, initial }
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
   const textareaRef = useRef(null)
+  const { data: allAlumni = [] } = useAllAlumni()
+  const alumniOptions = allAlumni.map((a) => ({ value: a.id, label: a.full_name }))
 
   useEffect(() => {
     if (open) {
@@ -93,6 +98,7 @@ export function InterviewForm({ open, onOpenChange, onSubmit, loading, initial }
           content: initial.content ?? '',
           coverFile: null,
           published: initial.published ?? false,
+          alumni_id: initial.alumni_id ?? '',
         })
         setSlugManuallyEdited(true)
       } else {
@@ -162,6 +168,18 @@ export function InterviewForm({ open, onOpenChange, onSubmit, loading, initial }
               onChange={(e) => set('excerpt', e.target.value)}
               rows={2}
               placeholder="Breve descrição da entrevista..."
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>Alumni entrevistado</Label>
+            <Combobox
+              options={alumniOptions}
+              value={form.alumni_id}
+              onChange={(val) => set('alumni_id', val)}
+              placeholder="Selecionar alumni..."
+              searchPlaceholder="Buscar alumni..."
+              emptyMessage="Nenhum alumni encontrado."
             />
           </div>
 

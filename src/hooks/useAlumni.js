@@ -1,6 +1,21 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 
+// Flat list of all alumni — used for admin comboboxes
+export function useAllAlumni() {
+  return useQuery({
+    queryKey: ['alumni-all'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('alumni')
+        .select('id, full_name')
+        .order('full_name')
+      if (error) throw error
+      return data ?? []
+    },
+  })
+}
+
 const PAGE_SIZE = 12
 
 export function useAlumni({ search = '', sector = '', company = '', city = '', entryClass = '', openToMentoring = false, page = 1 } = {}) {

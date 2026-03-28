@@ -1,7 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { useQuery } from '@tanstack/react-query'
-import { supabase } from '@/lib/supabase'
 import { useInterview } from '@/hooks/useInterviews'
 import { useAuth } from '@/contexts/AuthContext'
 import { PostContent } from '@/components/blog/PostContent'
@@ -9,32 +7,11 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, User } from 'lucide-react'
 
-// Try to find the interviewee in the alumni database by matching name from the title
-function useAlumniMatch(title) {
-  // Extract name from "Entrevista: Name Here"
-  const name = title?.replace(/^Entrevista:\s*/i, '').trim()
-
-  return useQuery({
-    queryKey: ['alumni-match', name],
-    queryFn: async () => {
-      if (!name || name.length < 3) return null
-      // Try exact match first, then partial
-      const { data } = await supabase
-        .from('alumni')
-        .select('id, full_name')
-        .ilike('full_name', `%${name}%`)
-        .limit(1)
-      return data?.[0] ?? null
-    },
-    enabled: !!name,
-  })
-}
-
 export default function EntrevistaPost() {
   const { slug } = useParams()
   const { data: post, isLoading, isError } = useInterview(slug)
   const { isAuthenticated, isApproved } = useAuth()
-  const { data: alumniMatch } = useAlumniMatch(post?.title)
+  const alumniMatch = post?.alumni ?? null
 
   if (isLoading) {
     return (

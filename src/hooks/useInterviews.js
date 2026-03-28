@@ -39,7 +39,7 @@ export function useInterview(slug) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('interviews')
-        .select('*')
+        .select('*, alumni:alumni(id, full_name)')
         .eq('slug', slug)
         .eq('published', true)
         .single()

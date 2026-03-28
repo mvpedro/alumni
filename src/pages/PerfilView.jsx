@@ -1,13 +1,14 @@
 import { useParams, Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { ArrowLeft, Building2, MapPin, GraduationCap, ExternalLink, Mail, BookOpen, Briefcase } from 'lucide-react'
+import { ArrowLeft, Building2, MapPin, GraduationCap, ExternalLink, Mail, BookOpen, Briefcase, Clapperboard } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
+import { YouTubeEmbed } from '@/components/common/YouTubeEmbed'
 
 function usePublicProfile(id) {
   return useQuery({
@@ -25,9 +26,39 @@ function usePublicProfile(id) {
   })
 }
 
+function useParticipations(alumniId) {
+  return useQuery({
+    queryKey: ['participations', alumniId],
+    queryFn: async () => {
+      const [interviewsRes, videosRes] = await Promise.all([
+        supabase
+          .from('interviews')
+          .select('id, title, slug, published_at')
+          .eq('alumni_id', alumniId)
+          .eq('published', true)
+          .order('published_at', { ascending: false }),
+        supabase
+          .from('trabalho_alumni')
+          .select('id, title, youtube_url, semester')
+          .eq('alumni_id', alumniId)
+          .eq('published', true)
+          .order('semester', { ascending: false }),
+      ])
+      if (interviewsRes.error) throw interviewsRes.error
+      if (videosRes.error) throw videosRes.error
+      return {
+        interviews: interviewsRes.data ?? [],
+        videos: videosRes.data ?? [],
+      }
+    },
+    enabled: !!alumniId,
+  })
+}
+
 export default function PerfilView() {
   const { id } = useParams()
   const { data: profile, isLoading, isError } = usePublicProfile(id)
+  const { data: participations } = useParticipations(id)
 
   if (isLoading) {
     return (
@@ -241,7 +272,7 @@ export default function PerfilView() {
 
       {/* Career History */}
       {careerHistory.length > 0 && (
-        <Card>
+        <Card className="mb-6">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <Briefcase className="h-4 w-4" />
@@ -270,6 +301,63 @@ export default function PerfilView() {
                 </li>
               ))}
             </ol>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Participações */}
+      {participations && (participations.interviews.length > 0 || participations.videos.length > 0) && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Clapperboard className="h-4 w-4" />
+              Participações
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {participations.interviews.length > 0 && (
+              <div>
+                <h3 className="mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wide">Entrevistas</h3>
+                <ul className="space-y-2">
+                  {participations.interviews.map((interview) => (
+                    <li key={interview.id}>
+                      <Link
+                        to={`/entrevistas/${interview.slug}`}
+                        className="text-sm font-medium hover:underline text-primary"
+                      >
+                        {interview.title}
+                      </Link>
+                      {interview.published_at && (
+                        <span className="ml-2 text-xs text-muted-foreground">
+                          {new Date(interview.published_at).toLocaleDateString('pt-BR', {
+                            month: 'long',
+                            year: 'numeric',
+                          })}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {participations.videos.length > 0 && (
+              <div>
+                <h3 className="mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                  Trabalho Alumni
+                </h3>
+                <div className="grid gap-6 sm:grid-cols-2">
+                  {participations.videos.map((video) => (
+                    <div key={video.id}>
+                      <YouTubeEmbed url={video.youtube_url} title={video.title} />
+                      {video.title && (
+                        <p className="mt-2 text-sm font-medium leading-snug">{video.title}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

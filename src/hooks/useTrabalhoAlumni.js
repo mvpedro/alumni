@@ -7,7 +7,8 @@ export function useTrabalhoAlumni({ published } = {}) {
     queryFn: async () => {
       let query = supabase
         .from('trabalho_alumni')
-        .select('*')
+        .select('*, alumni:alumni(id, full_name)')
+        .order('semester', { ascending: false })
         .order('display_order', { ascending: true })
       if (published !== undefined) {
         query = query.eq('published', published)
