@@ -15,6 +15,7 @@ import Perfil from '@/pages/Perfil'
 import BancoDeDados from '@/pages/BancoDeDados'
 import PerfilView from '@/pages/PerfilView'
 import MapaDosEgressos from '@/pages/MapaDosEgressos'
+import MapaExperiment from '@/pages/MapaExperiment'
 import Landing from '@/pages/Landing'
 import Contato from '@/pages/Contato'
 import Entrevistas from '@/pages/Entrevistas'
@@ -53,6 +54,7 @@ export default function App() {
                 <Route path="/" element={<Landing />} />
                 <Route path="/contato" element={<Contato />} />
                 <Route path="/mapa-dos-egressos" element={<MapaDosEgressos />} />
+                <Route path="/mapa-experiment" element={<MapaExperiment />} />
                 <Route path="/entrevistas" element={<Entrevistas />} />
                 <Route path="/entrevistas/:slug" element={<EntrevistaPost />} />
                 <Route path="/trabalho-alumni" element={<TrabalhoAlumni />} />
