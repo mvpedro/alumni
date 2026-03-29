@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClientProvider } from '@tanstack/react-query'
 import * as Sentry from '@sentry/react'
@@ -10,30 +11,50 @@ import { ProtectedRoute } from '@/components/layout/ProtectedRoute'
 import { ApprovedRoute } from '@/components/layout/ApprovedRoute'
 import { AdminRoute } from '@/components/layout/AdminRoute'
 import { AdminLayout } from '@/components/layout/AdminLayout'
+import { Skeleton } from '@/components/ui/skeleton'
+
+// Eagerly loaded (critical path)
+import Landing from '@/pages/Landing'
 import Login from '@/pages/Login'
 import Cadastro from '@/pages/Cadastro'
-import EsqueciSenha from '@/pages/EsqueciSenha'
-import Perfil from '@/pages/Perfil'
-import BancoDeDados from '@/pages/BancoDeDados'
-import PerfilView from '@/pages/PerfilView'
-import MapaDosEgressos from '@/pages/MapaDosEgressos'
-import MapaExperiment from '@/pages/MapaExperiment'
-import Landing from '@/pages/Landing'
-import Contato from '@/pages/Contato'
-import Entrevistas from '@/pages/Entrevistas'
-import EntrevistaPost from '@/pages/EntrevistaPost'
-import Dashboard from '@/pages/admin/Dashboard'
-import Usuarios from '@/pages/admin/Usuarios'
-import Empresas from '@/pages/admin/Empresas'
-import Setores from '@/pages/admin/Setores'
-import ContatoAdmin from '@/pages/admin/ContatoAdmin'
-import EntrevistasAdmin from '@/pages/admin/EntrevistasAdmin'
-import TrabalhoAlumni from '@/pages/TrabalhoAlumni'
-import TrabalhoAlumniVideo from '@/pages/TrabalhoAlumniVideo'
-import TrabalhoAlumniAdmin from '@/pages/admin/TrabalhoAlumniAdmin'
-import Palestras from '@/pages/Palestras'
-import PalestrasAdmin from '@/pages/admin/PalestrasAdmin'
-import BadgesAdmin from '@/pages/admin/BadgesAdmin'
+
+// Lazy loaded (non-critical)
+const EsqueciSenha = lazy(() => import('@/pages/EsqueciSenha'))
+const Perfil = lazy(() => import('@/pages/Perfil'))
+const BancoDeDados = lazy(() => import('@/pages/BancoDeDados'))
+const PerfilView = lazy(() => import('@/pages/PerfilView'))
+const MapaDosEgressos = lazy(() => import('@/pages/MapaDosEgressos'))
+const MapaExperiment = lazy(() => import('@/pages/MapaExperiment'))
+const Contato = lazy(() => import('@/pages/Contato'))
+const Entrevistas = lazy(() => import('@/pages/Entrevistas'))
+const EntrevistaPost = lazy(() => import('@/pages/EntrevistaPost'))
+const TrabalhoAlumni = lazy(() => import('@/pages/TrabalhoAlumni'))
+const TrabalhoAlumniVideo = lazy(() => import('@/pages/TrabalhoAlumniVideo'))
+const Palestras = lazy(() => import('@/pages/Palestras'))
+
+// Admin pages — always lazy
+const Dashboard = lazy(() => import('@/pages/admin/Dashboard'))
+const Usuarios = lazy(() => import('@/pages/admin/Usuarios'))
+const Empresas = lazy(() => import('@/pages/admin/Empresas'))
+const Setores = lazy(() => import('@/pages/admin/Setores'))
+const ContatoAdmin = lazy(() => import('@/pages/admin/ContatoAdmin'))
+const EntrevistasAdmin = lazy(() => import('@/pages/admin/EntrevistasAdmin'))
+const TrabalhoAlumniAdmin = lazy(() => import('@/pages/admin/TrabalhoAlumniAdmin'))
+const PalestrasAdmin = lazy(() => import('@/pages/admin/PalestrasAdmin'))
+const BadgesAdmin = lazy(() => import('@/pages/admin/BadgesAdmin'))
+
+function PageLoader() {
+  return (
+    <div className="container mx-auto flex items-center justify-center px-4 py-24">
+      <div className="space-y-4 w-full max-w-2xl">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-3/4" />
+        <Skeleton className="h-64 w-full rounded-xl" />
+      </div>
+    </div>
+  )
+}
 
 function NotFound() {
   return (
@@ -51,6 +72,7 @@ export default function App() {
       <AuthProvider>
         <BrowserRouter>
           <TooltipProvider>
+            <Suspense fallback={<PageLoader />}>
             <Routes>
               {/* Auth pages — no navbar/footer */}
               <Route path="/login" element={<Login />} />
@@ -94,6 +116,7 @@ export default function App() {
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>
+            </Suspense>
           </TooltipProvider>
         </BrowserRouter>
         <Toaster />
