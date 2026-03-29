@@ -7,7 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const SUPABASE_URL = 'https://vjceckswmormyvcspjyb.supabase.co'
 const SUPABASE_SERVICE_KEY =
-  '***REDACTED_SERVICE_ROLE_KEY***'
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
