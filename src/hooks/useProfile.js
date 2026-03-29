@@ -14,6 +14,15 @@ export function useUpdateProfile() {
         .select()
         .single()
       if (error) throw error
+
+      // Sync key fields back to profiles table
+      const profileSync = {}
+      if (updates.full_name) profileSync.full_name = updates.full_name
+      if (updates.entry_class) profileSync.entry_class = updates.entry_class
+      if (Object.keys(profileSync).length > 0) {
+        await supabase.from('profiles').update(profileSync).eq('id', user.id)
+      }
+
       return data
     },
     onSuccess: () => {
