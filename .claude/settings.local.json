@@ -76,7 +76,8 @@
       "Bash(SUPABASE_ACCESS_TOKEN=sbp_da3dd39846310eef182437731f1d135f98f53e2b npx supabase db push)",
       "Bash(__NEW_LINE_e9f3c92728a22696__ curl:*)",
       "Bash(SUPABASE_SERVICE_ROLE_KEY=\"***REDACTED_SERVICE_ROLE_KEY***\" node scripts/fetch-company-logos.mjs)",
-      "Bash(echo \"SELECT policyname, cmd, qual, with_check FROM pg_policies WHERE tablename = ''''companies'''';\")"
+      "Bash(echo \"SELECT policyname, cmd, qual, with_check FROM pg_policies WHERE tablename = ''''companies'''';\")",
+      "Bash(npm test:*)"
     ]
   }
 }
