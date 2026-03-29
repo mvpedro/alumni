@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# 1. Prevent committing secrets
+echo "🔒 Checking for secrets..."
+if git diff --cached --diff-filter=d -U0 | grep -qE "eyJ[A-Za-z0-9_-]{20,}\.eyJ|sb_secret_|sbp_[a-z0-9]{30,}|re_[A-Za-z0-9]{30,}|sntryu_[a-z0-9]{30,}"; then
+  echo "❌ ERROR: Possible secret detected in staged files!"
+  echo "Review your changes and remove any API keys, tokens, or passwords."
+  exit 1
+fi
+echo "✓ No secrets found"
+
+# 2. Build check
+echo "🔨 Checking build..."
+npx vite build 2>&1 | tail -1
+if [ $? -ne 0 ]; then
+  echo "❌ ERROR: Build failed. Fix errors before committing."
+  exit 1
+fi
+echo "✓ Build passed"
