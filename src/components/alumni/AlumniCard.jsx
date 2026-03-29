@@ -3,7 +3,6 @@ import { Building2, MapPin, GraduationCap, User } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 export function AlumniCard({ alumni, anonymous = false }) {
   const initials = alumni.full_name
@@ -78,23 +77,23 @@ export function AlumniCard({ alumni, anonymous = false }) {
         )}
 
         {alumni.alumni_badges && alumni.alumni_badges.length > 0 && (
-          <div className="mt-2 flex gap-1.5">
+          <div className="mt-2 flex flex-wrap gap-1">
             {alumni.alumni_badges.slice(0, 3).map((ab) => {
               const badge = ab.badge
               if (!badge) return null
               const color = badge.color ?? '#0d9488'
               return (
-                <Tooltip key={badge.slug}>
-                  <TooltipTrigger asChild>
-                    <span
-                      className="h-2.5 w-2.5 rounded-full shrink-0"
-                      style={{ backgroundColor: color }}
-                    />
-                  </TooltipTrigger>
-                  <TooltipContent side="top">
-                    <p className="text-xs">{badge.name}</p>
-                  </TooltipContent>
-                </Tooltip>
+                <span
+                  key={badge.slug}
+                  className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium"
+                  style={{
+                    backgroundColor: `${color}15`,
+                    color: color,
+                    border: `1px solid ${color}30`,
+                  }}
+                >
+                  {badge.name}
+                </span>
               )
             })}
           </div>

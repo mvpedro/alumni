@@ -62,7 +62,21 @@
       "Bash(grep -li \"lorem\\\\|Lorem\\\\|ipsum\\\\|Ipsum\" scripts/interviews/*.json)",
       "Bash(python -c \"import json,sys; orgs=json.load\\(sys.stdin\\); [print\\(o[''''slug''''], o[''''name'''']\\) for o in orgs]\")",
       "Bash(rm public/og-image.svg)",
-      "Bash(npm list:*)"
+      "Bash(npm list:*)",
+      "WebFetch(domain:www.youtube.com)",
+      "Bash(node:*)",
+      "Bash(DAS-UFSC\" and:*)",
+      "Bash(SUPABASE_ACCESS_TOKEN=sbp_da3dd39846310eef182437731f1d135f98f53e2b npx supabase db push 2>&1)",
+      "Bash(grep -li \"warning\\\\|Warning\\\\|WARNING\" scripts/interviews/*.json)",
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Read(//c/Users/pedro/Documents/work/alumni/scripts/interviews/**)",
+      "Bash(done)",
+      "Bash(grep -lE \"device_hub|child_care|Magna etiam|veroeros|warning[A-Z]\" scripts/interviews/*.json)",
+      "Bash(SUPABASE_ACCESS_TOKEN=sbp_da3dd39846310eef182437731f1d135f98f53e2b npx supabase db push)",
+      "Bash(__NEW_LINE_e9f3c92728a22696__ curl:*)",
+      "Bash(SUPABASE_SERVICE_ROLE_KEY=\"***REDACTED_SERVICE_ROLE_KEY***\" node scripts/fetch-company-logos.mjs)",
+      "Bash(echo \"SELECT policyname, cmd, qual, with_check FROM pg_policies WHERE tablename = ''''companies'''';\")"
     ]
   }
 }
