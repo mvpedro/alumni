@@ -91,8 +91,18 @@ Currently working directly on `main` for speed. For larger features, use feature
 
 ### Deploy
 
+Requires UFSC VPN connection. One command:
+
+```bash
+npm run deploy              # builds + deploys automatically
+npm run deploy:skip-build   # deploy only (if dist/ already built)
+```
+
+The script (`scripts/deploy.mjs`) reads SFTP credentials from `.env`, builds the project, connects via SFTP, cleans old hashed assets from the server, and uploads all new files. No manual SFTP commands needed.
+
+**Manual fallback** (if the script doesn't work):
 1. `npm run build`
-2. `sftp -P 2200 alumniautomacao@nfs.sites.ufsc.br` (requires UFSC VPN, password entered interactively)
+2. `sftp -P 2200 alumniautomacao@nfs.sites.ufsc.br` (password in .env)
 3. Delete old `assets/index-*.js` and `assets/index-*.css` from server
 4. Upload new `index.html`, `assets/*`, and any new static files to `public_html/`
 
