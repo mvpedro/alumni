@@ -61,7 +61,7 @@ const skipBuild = process.argv.includes('--skip-build')
 if (!skipBuild) {
   console.log('\n🔨 Step 1: Building...')
   try {
-    execFileSync('npx', ['vite', 'build'], { cwd: ROOT, stdio: 'inherit' })
+    execFileSync('npx', ['vite', 'build'], { cwd: ROOT, stdio: 'inherit', shell: process.platform === 'win32' })
   } catch {
     console.error('ERROR: Build failed.')
     process.exit(1)
