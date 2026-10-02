@@ -20,6 +20,7 @@ import Cadastro from '@/pages/Cadastro'
 
 // Lazy loaded (non-critical)
 const EsqueciSenha = lazy(() => import('@/pages/EsqueciSenha'))
+const RedefinirSenha = lazy(() => import('@/pages/RedefinirSenha'))
 const Perfil = lazy(() => import('@/pages/Perfil'))
 const BancoDeDados = lazy(() => import('@/pages/BancoDeDados'))
 const PerfilView = lazy(() => import('@/pages/PerfilView'))
@@ -31,6 +32,7 @@ const EntrevistaPost = lazy(() => import('@/pages/EntrevistaPost'))
 const TrabalhoAlumni = lazy(() => import('@/pages/TrabalhoAlumni'))
 const TrabalhoAlumniVideo = lazy(() => import('@/pages/TrabalhoAlumniVideo'))
 const Palestras = lazy(() => import('@/pages/Palestras'))
+const Oportunidades = lazy(() => import('@/pages/Oportunidades'))
 
 // Admin pages — always lazy
 const Dashboard = lazy(() => import('@/pages/admin/Dashboard'))
@@ -42,6 +44,7 @@ const EntrevistasAdmin = lazy(() => import('@/pages/admin/EntrevistasAdmin'))
 const TrabalhoAlumniAdmin = lazy(() => import('@/pages/admin/TrabalhoAlumniAdmin'))
 const PalestrasAdmin = lazy(() => import('@/pages/admin/PalestrasAdmin'))
 const BadgesAdmin = lazy(() => import('@/pages/admin/BadgesAdmin'))
+const OportunidadesAdmin = lazy(() => import('@/pages/admin/OportunidadesAdmin'))
 
 function PageLoader() {
   return (
@@ -78,6 +81,7 @@ export default function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/cadastro" element={<Cadastro />} />
               <Route path="/esqueci-senha" element={<EsqueciSenha />} />
+              <Route path="/redefinir-senha" element={<RedefinirSenha />} />
 
               {/* Main layout — navbar + footer */}
               <Route element={<MainLayout />}>
@@ -90,6 +94,7 @@ export default function App() {
                 <Route path="/trabalho-alumni" element={<TrabalhoAlumni />} />
                 <Route path="/trabalho-alumni/:id" element={<TrabalhoAlumniVideo />} />
                 <Route path="/palestras" element={<Palestras />} />
+                <Route path="/oportunidades" element={<Oportunidades />} />
 
                 <Route path="/perfil" element={
                   <ProtectedRoute><Perfil /></ProtectedRoute>
@@ -111,6 +116,7 @@ export default function App() {
                   <Route path="trabalho-alumni" element={<TrabalhoAlumniAdmin />} />
                   <Route path="palestras" element={<PalestrasAdmin />} />
                   <Route path="badges" element={<BadgesAdmin />} />
+                  <Route path="oportunidades" element={<OportunidadesAdmin />} />
                 </Route>
 
                 <Route path="*" element={<NotFound />} />

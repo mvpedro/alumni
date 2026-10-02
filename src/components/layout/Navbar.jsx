@@ -12,6 +12,7 @@ const publicLinks = [
   { to: '/entrevistas', label: 'Entrevistas' },
   { to: '/trabalho-alumni', label: 'Trabalho Alumni' },
   { to: '/palestras', label: 'Palestras' },
+  { to: '/oportunidades', label: 'Oportunidades' },
   { to: '/contato', label: 'Contato' },
 ]
 
