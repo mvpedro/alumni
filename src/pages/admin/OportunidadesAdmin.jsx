@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Check, Pencil, Plus, Trash2, X } from 'lucide-react'
+import { Check, Mail, MessageCircle, Pencil, Plus, Trash2, X } from 'lucide-react'
 import { toast } from 'sonner'
 import {
   useAllOportunidades,
@@ -19,6 +19,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 
 const STATUS_VARIANT = { pending: 'secondary', published: 'default', rejected: 'destructive', closed: 'outline' }
 
+// Published, still open, and not yet shared on every channel
+function needsSharing(op) {
+  return op.status === 'published' && !isExpired(op) && (!op.email_sent_at || !op.whatsapp_sent_at)
+}
+
 function isExpired(op) {
   return op.expires_at < new Date().toISOString().slice(0, 10)
 }
@@ -34,7 +39,11 @@ export default function OportunidadesAdmin() {
   const [editTarget, setEditTarget] = useState(null)
 
   const pendingCount = oportunidades.filter((o) => o.status === 'pending').length
-  const rows = tab === 'all' ? oportunidades : oportunidades.filter((o) => o.status === tab)
+  const toShareCount = oportunidades.filter(needsSharing).length
+  const rows =
+    tab === 'all' ? oportunidades
+    : tab === 'to_share' ? oportunidades.filter(needsSharing)
+    : oportunidades.filter((o) => o.status === tab)
 
   function openCreate() {
     setEditTarget(null)
@@ -70,6 +79,16 @@ export default function OportunidadesAdmin() {
     }
   }
 
+  async function toggleSent(op, field, label) {
+    const value = op[field] ? null : new Date().toISOString()
+    try {
+      await updateOp.mutateAsync({ id: op.id, [field]: value })
+      toast.success(value ? `Marcada como divulgada no ${label}.` : `Divulgação no ${label} desmarcada.`)
+    } catch (err) {
+      toast.error(err?.message ?? 'Erro ao atualizar vaga.')
+    }
+  }
+
   async function handleDelete(id) {
     if (!confirm('Excluir esta vaga?')) return
     try {
@@ -95,6 +114,9 @@ export default function OportunidadesAdmin() {
           <TabsTrigger value="pending">
             Em análise{pendingCount > 0 && <Badge variant="secondary" className="ml-1.5">{pendingCount}</Badge>}
           </TabsTrigger>
+          <TabsTrigger value="to_share">
+            A divulgar{toShareCount > 0 && <Badge variant="secondary" className="ml-1.5">{toShareCount}</Badge>}
+          </TabsTrigger>
           <TabsTrigger value="published">Publicadas</TabsTrigger>
           <TabsTrigger value="all">Todas</TabsTrigger>
         </TabsList>
@@ -109,6 +131,7 @@ export default function OportunidadesAdmin() {
               <TableHead className="hidden md:table-cell">Enviada por</TableHead>
               <TableHead className="hidden md:table-cell">Validade</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead className="hidden lg:table-cell">Divulgação</TableHead>
               <TableHead className="w-32 text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
@@ -116,12 +139,12 @@ export default function OportunidadesAdmin() {
             {isLoading ? (
               Array.from({ length: 3 }).map((_, i) => (
                 <TableRow key={i}>
-                  <TableCell colSpan={6}><Skeleton className="h-6 w-full" /></TableCell>
+                  <TableCell colSpan={7}><Skeleton className="h-6 w-full" /></TableCell>
                 </TableRow>
               ))
             ) : rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="py-8 text-center text-muted-foreground">
+                <TableCell colSpan={7} className="py-8 text-center text-muted-foreground">
                   Nenhuma vaga nesta lista.
                 </TableCell>
               </TableRow>
@@ -139,6 +162,29 @@ export default function OportunidadesAdmin() {
                   </TableCell>
                   <TableCell>
                     <Badge variant={STATUS_VARIANT[op.status]}>{STATUS_LABELS[op.status]}</Badge>
+                  </TableCell>
+                  <TableCell className="hidden lg:table-cell">
+                    {op.status === 'published' && (
+                      <div className="flex gap-1">
+                        {[
+                          { field: 'email_sent_at', label: 'e-mail', icon: Mail },
+                          { field: 'whatsapp_sent_at', label: 'WhatsApp', icon: MessageCircle },
+                        ].map(({ field, label, icon: Icon }) => (
+                          <Button
+                            key={field}
+                            variant={op[field] ? 'default' : 'outline'}
+                            size="icon"
+                            className="h-8 w-8"
+                            title={op[field] ? `Divulgada no ${label} em ${new Date(op[field]).toLocaleDateString('pt-BR')}` : `Marcar como divulgada no ${label}`}
+                            disabled={updateOp.isPending}
+                            onClick={() => toggleSent(op, field, label)}
+                          >
+                            <Icon className="h-4 w-4" />
+                            <span className="sr-only">{label}</span>
+                          </Button>
+                        ))}
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">

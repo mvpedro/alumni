@@ -30,6 +30,9 @@ create table public.oportunidades (
   status text not null default 'pending'
     check (status in ('pending', 'published', 'rejected', 'closed')),
   published_at timestamptz,
+  -- admin-only: when the post was shared on the mailing list / WhatsApp group
+  email_sent_at timestamptz,
+  whatsapp_sent_at timestamptz,
   expires_at date not null default (current_date + 60),
   posted_by uuid references public.profiles(id) on delete set null default auth.uid(),
   created_at timestamptz not null default now(),
@@ -54,6 +57,8 @@ begin
     if tg_op = 'INSERT' then
       new.status := 'pending';
       new.posted_by := auth.uid();
+      new.email_sent_at := null;
+      new.whatsapp_sent_at := null;
     else
       -- owners may close their own post; any other edit goes back to review
       if new.status <> 'closed' then
@@ -61,6 +66,8 @@ begin
       end if;
       new.posted_by := old.posted_by;
       new.published_at := old.published_at;
+      new.email_sent_at := old.email_sent_at;
+      new.whatsapp_sent_at := old.whatsapp_sent_at;
     end if;
   end if;
   if new.status = 'published' and new.published_at is null then
